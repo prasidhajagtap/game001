@@ -1,89 +1,105 @@
-/* admin-style.css */
-#admin-overlay {
+/* admin-style.css - The UI Theme */
+
+:root {
+    --graffiti-yellow: #FFD700;
+    --graffiti-border: #3d2b1f;
+}
+
+/* === TOGGLE BUTTON STYLE === */
+.floating-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000; /* Highest Priority */
+    padding: 15px 30px;
+    background-color: var(--graffiti-yellow);
+    border: 4px solid #fff;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    transition: transform 0.2s;
+}
+.floating-toggle-btn:hover { transform: scale(1.1); }
+
+/* === DASHBOARD CONTAINER === */
+#admin-dashboard {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 10;
     background: url('bg1.jpg') no-repeat center center;
     background-size: cover;
-    transition: 0.5s all ease;
-    pointer-events: none; /* Allow play through transparency */
-}
-
-/* PLAY MODE STATE */
-body.play-view #admin-overlay {
-    background: transparent;
-}
-body.play-view #admin-main-ui {
-    display: none;
-}
-
-/* INTERACTIVE ELEMENTS */
-.seamex-logo, .graffiti-btn, .score-card {
-    pointer-events: auto;
-}
-
-.admin-header {
+    z-index: 100; /* Above game, below button */
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 20px 40px;
+    transition: opacity 0.4s ease, visibility 0.4s;
 }
 
-.seamex-logo { width: 140px; }
-
-.graffiti-text {
-    font-family: 'Permanent Marker', cursive;
-    color: #FFD700;
-    text-shadow: 4px 4px 0px #000;
-    margin: 0;
+/* === CRITICAL HIDING LOGIC === */
+/* When 'play-active' class is on body, hide the dashboard completely */
+body.play-active #admin-dashboard {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* Passes clicks through to game */
 }
 
-.score-card {
-    background: rgba(0,0,0,0.8);
-    border: 5px solid #3d2b1f;
-    border-radius: 30px;
-    width: 320px;
-    margin: 100px auto;
-    padding: 30px;
+/* === GRAFFITI THEME UI === */
+.dashboard-content {
+    background: rgba(0, 0, 0, 0.85);
+    border: 6px solid var(--graffiti-yellow);
+    border-radius: 25px;
+    padding: 40px;
     text-align: center;
+    width: 350px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
 }
 
-.big-score {
+.graffiti-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 2.5rem;
+    color: var(--graffiti-yellow);
+    text-shadow: 3px 3px 0 #000;
+    margin: 10px 0;
+}
+
+.graffiti-subtitle {
+    font-family: 'Permanent Marker', cursive;
+    color: white;
+}
+
+#ui-score {
     font-family: 'Permanent Marker', cursive;
     font-size: 5rem;
-    color: #fff;
+    color: var(--graffiti-yellow);
+    margin: 10px 0;
 }
 
 .graffiti-btn {
-    background: #FFD700;
+    background: var(--graffiti-yellow);
     border: none;
     padding: 12px 24px;
     font-family: 'Permanent Marker', cursive;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     cursor: pointer;
-    box-shadow: 4px 4px 0px #3d2b1f;
+    margin-top: 10px;
 }
 
-.character-guide {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 140px;
-}
+.dash-logo { width: 160px; margin-bottom: 10px; }
+.decor-row { margin-top: 20px; }
+.decor-block { width: 80px; margin: 0 5px; }
+.dash-char { position: absolute; bottom: 20px; left: 20px; width: 150px; }
 
-/* SCREENSHOT BUILDER (HIDDEN) */
-#capture-container {
-    position: absolute;
-    left: -9999px;
-    width: 600px;
-    height: 600px;
+/* === HIDDEN SCREENSHOT AREA === */
+#capture-area {
+    position: absolute; left: -9999px; width: 600px; height: 600px;
     background: url('bg1.jpg') center/cover;
 }
 .cap-logo { position: absolute; top: 20px; left: 20px; width: 150px; }
-.cap-body { text-align: center; padding-top: 180px; }
-#cap-score-display { font-family: 'Permanent Marker'; font-size: 110px; color: #FFD700; text-shadow: 4px 4px #000; }
-.cap-character { position: absolute; bottom: 80px; right: 20px; width: 120px; }
-.cap-footer-block { position: absolute; bottom: 0; width: 100%; height: 100px; object-fit: cover; }
+.cap-body { text-align: center; padding-top: 150px; }
+.cap-body h1 { color: #fff; font-size: 40px; }
+#cap-score { font-family: 'Permanent Marker'; font-size: 100px; color: var(--graffiti-yellow); }
+.cap-char { position: absolute; bottom: 80px; right: 20px; width: 120px; }
+.cap-footer { position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; object-fit: cover; }
