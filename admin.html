@@ -2,11 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Poornata | Dedicated Admin</title>
-    <link rel="stylesheet" href="admin-style.css">
+    <title>Admin Dashboard - game001</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container { padding: 25px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background-color: #FCF4DC !important; color: #525252; padding: 12px; }
+        td { border-bottom: 1px solid #eaeaea; padding: 10px; text-align: center; }
+    </style>
 </head>
-<body class="admin-view">
-    <div id="admin-overlay" style="pointer-events: auto;">
-        </div>
+<body>
+    <div class="admin-container">
+        <h2 class="section_title">Admin Game Analytics</h2>
+        <table id="adminTable">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Poornata ID</th>
+                    <th>Last Played</th>
+                    <th>Top 3 Scores</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        const tbody = document.querySelector('#adminTable tbody');
+        
+        if(user) {
+            const row = `<tr>
+                <td>${user.name}</td>
+                <td>${user.pid}</td>
+                <td>${new Date(user.lastPlayed).toLocaleDateString()}</td>
+                <td>${user.scores.join(', ') || 'N/A'}</td>
+            </tr>`;
+            tbody.innerHTML = row;
+        } else {
+            tbody.innerHTML = "<tr><td colspan='4'>No data found</td></tr>";
+        }
+    </script>
 </body>
 </html>
