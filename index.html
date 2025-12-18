@@ -5,73 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Poornata Game & Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css"> 
     <link rel="stylesheet" href="admin-style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        /* CRITICAL FIX: Ensure the game is the base layer */
-        #game-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1; /* Lowest Layer */
-        }
-
-        /* The Admin Overlay allows clicks to pass through to the game */
-        #admin-ui-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 10; /* Top Layer */
-            pointer-events: none; /* This makes the game clickable! */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        /* Re-enable clicks for buttons and menus only */
-        .interactive-ui {
-            pointer-events: auto;
-        }
-    </style>
 </head>
-<body>
+<body class="game-mode">
 
     <div id="game-container"></div>
 
-    <div id="admin-ui-layer">
-        
-        <header class="interactive-ui" style="padding: 20px;">
-            <img src="NEW Seamex logo.png" alt="Seamex" style="width: 150px;">
-            <h1 class="graffiti-text" style="font-size: 2rem; margin: 0;">POORNATA ADMIN</h1>
+    <div id="admin-ui-overlay">
+        <header class="admin-header">
+            <img src="NEW Seamex logo.png" alt="Seamex" class="admin-logo">
+            <h1 class="graffiti-title">POORNATA ADMIN</h1>
+            <button id="togglePlayMode" class="graffiti-btn">START GAME</button>
         </header>
 
-        <div class="interactive-ui" style="align-self: center; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 15px; border: 2px solid #FFD700;">
-            <h2 class="graffiti-text" style="font-size: 1.5rem;">SCORE: <span id="user-actual-score">0</span></h2>
-            <button id="shareNowBtn" class="share-trigger">SHARE NOW</button>
+        <div id="admin-panel-content">
+            <div class="stat-card">
+                <h2 class="graffiti-text">DAILY SCORE</h2>
+                <div class="score-display-main" id="user-actual-score">0</div>
+                <button id="shareNowBtn" class="graffiti-btn share-btn">SHARE NOW</button>
+            </div>
+            
+            <div class="theme-blocks">
+                <img src="block-1.png" class="ui-block">
+                <img src="block-2.png" class="ui-block">
+            </div>
         </div>
 
-        <div class="interactive-ui" style="align-self: flex-end; padding: 20px;">
-            <img src="character.png" alt="AVA" style="width: 120px;">
-        </div>
+        <img src="character.png" alt="AVA" class="admin-character">
     </div>
 
-    <div id="capture-container" style="position: absolute; left: -9999px; width: 600px; height: 600px; background: url('bg1.jpg') center/cover;">
-        <img src="NEW Seamex logo.png" style="position: absolute; top: 20px; left: 20px; width: 140px;">
-        <div style="text-align: center; padding-top: 180px;">
-            <h1 class="graffiti-text" style="color: white; font-size: 40px;">DAILY SCORE</h1>
-            <div id="score-display" class="graffiti-text" style="font-size: 100px; color: #FFD700;">0</div>
-            <p id="date-display" style="color: white; font-weight: bold; font-family: sans-serif;"></p>
+    <div id="capture-container">
+        <img src="NEW Seamex logo.png" class="cap-logo">
+        <div class="cap-content">
+            <h2 class="graffiti-text">POORNATA SCORE</h2>
+            <div id="capture-score-val">0</div>
+            <p id="capture-date"></p>
         </div>
-        <img src="character.png" style="position: absolute; bottom: 80px; right: 20px; width: 120px;">
-        <img src="block-2.jpg" style="position: absolute; bottom: 0; width: 100%; height: 100px;">
+        <img src="character.png" class="cap-char">
+        <img src="block-2.png" class="cap-footer">
     </div>
 
-    <script src="script.js"></script>
-    <script src="admin-script.js"></script>
-</body>
+    <script src="script.js"></script> <script src="admin-script.js"></script> </body>
 </html>
