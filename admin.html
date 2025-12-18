@@ -2,54 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poornata | Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <title>Poornata | Dedicated Admin</title>
     <link rel="stylesheet" href="admin-style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
-<body>
-
-    <div class="admin-wrapper">
-        <nav class="admin-nav">
-            <img src="NEW Seamex logo.png" alt="Seamex" class="admin-logo">
-            <h1 class="graffiti-text">POORNATA ADMIN</h1>
-        </nav>
-
-        <main class="admin-content">
-            <div class="stat-card">
-                <h2 class="card-title">Daily Performance</h2>
-                <div class="score-box">
-                    <p>CURRENT SCORE</p>
-                    <span id="user-actual-score">8,240</span>
-                </div>
-                <button id="shareNowBtn" class="share-trigger">SHARE NOW</button>
-            </div>
-
-            <div class="block-container">
-                <div class="game-block" style="background-image: url('block-1.jpg');">
-                    <p>Level Status: ACTIVE</p>
-                </div>
-                <div class="game-block" style="background-image: url('block-2.jpg');">
-                    <p>Environment: URBAN</p>
-                </div>
-            </div>
-        </main>
-
-        <img src="character.png" class="floating-ava" alt="AVA Robot">
-    </div>
-
-    <div id="capture-container">
-        <img src="NEW Seamex logo.png" class="capture-logo">
-        <div class="capture-body">
-            <h1 class="capture-score-title">DAILY SCORE</h1>
-            <div id="score-display">0</div>
-            <p id="date-display"></p>
+<body class="admin-view">
+    <div id="admin-overlay" style="pointer-events: auto;">
         </div>
-        <img src="character.png" class="capture-character">
-        <img src="block-2.jpg" class="capture-footer">
-    </div>
-
-    <script src="admin-script.js"></script>
 </body>
 </html>
