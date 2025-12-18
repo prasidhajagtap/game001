@@ -2,49 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poornata Game & Admin</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="style.css">       <link rel="stylesheet" href="admin-style.css"> <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jump Master - game001</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="admin-active"> <div id="game-container">
-        <div id="game-placeholder-text">GAME AREA (CLICK TO TEST)</div>
-    </div>
-
-    <button id="mainToggleBtn" class="floating-toggle-btn">PLAY GAME</button>
-
-    <div id="admin-dashboard">
-        <div class="dashboard-content">
-            <img src="NEW Seamex logo.png" alt="Seamex" class="dash-logo">
-            <h1 class="graffiti-title">POORNATA ADMIN</h1>
-            
-            <div class="stats-box">
-                <h2 class="graffiti-subtitle">DAILY SCORE</h2>
-                <div id="ui-score">0</div>
-                <button id="shareBtn" class="graffiti-btn">SHARE SCORE</button>
-            </div>
-
-            <div class="decor-row">
-                <img src="block-1.png" class="decor-block">
-                <img src="block-2.png" class="decor-block">
-            </div>
+<body>
+    <div id="login-screen" class="overlay">
+        <div class="modal">
+            <h2 class="section_title">Welcome Player</h2>
+            <input type="text" id="username" placeholder="Enter Name" class="form-control">
+            <input type="text" id="poornataId" placeholder="Enter Poornata ID" class="form-control">
+            <button id="start-btn" class="btn">START GAME</button>
         </div>
-        
-        <img src="character.png" alt="Guide" class="dash-char">
     </div>
 
-    <div id="capture-area">
-        <img src="NEW Seamex logo.png" class="cap-logo">
-        <div class="cap-body">
-            <h1 class="graffiti-title">MY DAILY SCORE</h1>
-            <div id="cap-score">0</div>
-            <p id="cap-date"></p>
+    <div id="game-container">
+        <div id="ui-layer">
+            <div class="score-box">Score: <span id="score">0</span></div>
+            <div id="graffiti"></div>
         </div>
-        <img src="character.png" class="cap-char">
-        <img src="block-2.png" class="cap-footer">
+        <canvas id="gameCanvas"></canvas>
     </div>
 
-    <script src="script.js"></script>       <script src="admin-script.js"></script> </body>
+    <script src="game.js"></script>
+</body>
 </html>
