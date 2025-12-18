@@ -1,30 +1,106 @@
-/* style.css - The Game World */
+/* Mobile App Theme Integration */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
+
 body, html {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: #000;
+    font-family: 'Open Sans', sans-serif !important;
+    background-color: #FCFCFC;
 }
 
 #game-container {
-    position: fixed;
-    top: 0;
-    left: 0;
+    position: relative;
     width: 100vw;
     height: 100vh;
-    z-index: 0; /* Ensures it is behind the UI */
-    background: #111; /* Fallback color */
+    max-width: 600px; /* Limits size on Desktop for better UX */
+    margin: 0 auto;
+    background: #f1f0f7;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 100;
 }
 
-#game-placeholder-text {
-    color: #333;
-    font-family: sans-serif;
-    font-weight: bold;
-    font-size: 2rem;
+.modal {
+    background: #FCFCFC;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    width: 80%;
+}
+
+.form-control {
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+    border: none !important;
+    background-color: #f1f0f7 !important;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.btn {
+    background-color: #cbd7e3 !important;
+    color: #2f5878 !important;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.section_title {
+    color: #F2622E !important;
+    font-weight: 800;
+    font-size: 22px;
+}
+
+.score-box {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #65657c;
+    z-index: 10;
+}
+
+/* Graffiti Animation */
+#graffiti {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    font-weight: 800;
+    color: #F2622E;
     pointer-events: none;
+    opacity: 0;
+}
+
+.pop-anim {
+    animation: pop 0.8s ease-out;
+}
+
+@keyframes pop {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translate(-50%, -150%) scale(1.2); opacity: 0; }
 }
