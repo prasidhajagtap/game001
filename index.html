@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poornata Admin - Graffiti Theme</title>
+    <title>Poornata Game & Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
-    <div class="admin-layout">
+    <div id="game-container"></div>
+
+    <div id="admin-overlay">
         <header>
             <img src="NEW Seamex logo.png" alt="Seamex Logo" class="logo">
-            <h1 class="admin-title">Poornata Admin Panel</h1>
+            <h1 class="admin-title">Poornata Admin</h1>
+            <button id="toggleUI" class="graffiti-btn" style="pointer-events: auto;">HIDE UI TO PLAY</button>
         </header>
 
-        <main class="dashboard">
+        <div id="admin-controls" style="pointer-events: auto;">
             <div class="game-card">
-                <h2>GAME: ISLAND RUN</h2>
-                <div class="score-container">
-                    <p>TODAY'S TOP SCORE: <span id="user-actual-score">4560</span></p>
-                </div>
-                <button id="shareNowBtn" class="graffiti-btn">SHARE SCORE NOW</button>
+                <h2>PLAYER STATS</h2>
+                <p>SCORE: <span id="user-actual-score">0</span></p>
+                <button id="shareNowBtn" class="graffiti-btn">SHARE SCORE</button>
             </div>
-        </main>
+        </div>
 
         <img src="character.png" alt="Guide" class="admin-character">
     </div>
@@ -32,14 +33,11 @@
     <div id="capture-container">
         <img src="NEW Seamex logo.png" class="share-logo">
         <div class="share-content">
-            <h3 class="share-label">DAILY PROGRESS</h3>
-            <h1 id="score-display">0000</h1>
+            <h1 id="score-display">0</h1>
             <p id="date-display"></p>
         </div>
         <img src="character.png" class="share-character">
-        <div class="share-blocks">
-            <img src="block-2.jpg" class="island-footer">
-        </div>
+        <img src="block-2.jpg" class="island-footer">
     </div>
 
     <script src="script.js"></script>
