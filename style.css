@@ -1,38 +1,124 @@
-/* --- POORNATA THEME UPDATES --- */
-:root {
-    --graffiti-yellow: #FFD700;
-    --urban-black: #1a1a1a;
-}
-
+/* --- Global Theme --- */
 body {
-    background: url('bg1.jpg') no-repeat center center fixed !important;
-    background-size: cover !important;
+    margin: 0;
+    padding: 0;
+    background: url('bg1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
 }
 
-/* Update Game Cards to use the Block assets */
-.game-card {
-    background: url('block-1.jpg') no-repeat center bottom;
-    background-size: contain;
-    border: 3px solid #3d2b1f;
-    font-family: 'Permanent Marker', cursive; /* Add this Google Font in HTML */
-    color: var(--graffiti-yellow);
+.admin-title {
+    font-family: 'Permanent Marker', cursive;
+    color: #FFD700; /* Graffiti Yellow */
+    font-size: 3rem;
+    text-shadow: 4px 4px 0px #000;
+    text-align: center;
+}
+
+.logo {
+    width: 180px;
     padding: 20px;
 }
 
-/* Graffiti Spray effect for Titles */
-h1, .admin-title {
-    text-transform: uppercase;
-    color: var(--graffiti-yellow);
-    text-shadow: 4px 4px 0px #000;
-    letter-spacing: 3px;
+/* --- Game Card UI --- */
+.game-card {
+    background: url('block-1.jpg') no-repeat bottom center;
+    background-size: cover;
+    border: 5px solid #3d2b1f;
+    border-radius: 20px;
+    margin: 50px auto;
+    width: 80%;
+    max-width: 500px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* Character positioning */
+.game-card h2 {
+    font-family: 'Permanent Marker', cursive;
+    color: #FFD700;
+}
+
+.graffiti-btn {
+    background: #FFD700;
+    color: black;
+    border: none;
+    padding: 15px 30px;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: transform 0.2s;
+    margin-top: 20px;
+}
+
+.graffiti-btn:hover {
+    transform: scale(1.1) rotate(-2deg);
+    background: #fff;
+}
+
 .admin-character {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 120px;
-    content: url('character.png');
-    z-index: 100;
+    width: 150px;
+}
+
+/* --- Hidden Screenshot Template Styles --- */
+#capture-container {
+    position: absolute;
+    left: -9999px; /* Keep off-screen */
+    width: 600px;
+    height: 600px;
+    background: url('bg1.jpg') center;
+    background-size: cover;
+    overflow: hidden;
+}
+
+.share-logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 150px;
+}
+
+.share-content {
+    text-align: center;
+    margin-top: 150px;
+}
+
+.share-label {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 30px;
+}
+
+#score-display {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 120px;
+    color: #FFD700;
+    margin: 0;
+    text-shadow: 5px 5px 0px #000;
+}
+
+#date-display {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.share-character {
+    position: absolute;
+    bottom: 80px;
+    right: 30px;
+    width: 130px;
+    z-index: 10;
+}
+
+.island-footer {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
 }
