@@ -148,3 +148,103 @@ canvas {
     font-weight: bold;
     cursor: pointer;
 }
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-width: 600px; /* Optimized for mobile feel on desktop */
+    margin: 0 auto;
+    background-image: url('bg1.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+#game-header {
+    background: #F2622E;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    font-size: 22px;
+    font-weight: 800;
+    text-transform: uppercase;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Fix for Overlapping Score and Pause */
+.ui-top {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 20;
+}
+
+.score-box {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    color: #F2622E;
+}
+
+#pause-btn {
+    background: #F2622E;
+    border: 2px solid white;
+    color: white;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* Theme-matching Center-Aligned Modal */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modal {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center; /* Center aligned content */
+    width: 80%;
+    max-width: 350px;
+    border-top: 8px solid #F2622E;
+}
+
+.modal h2 { color: #F2622E; margin-top: 0; }
+
+#progress-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(238, 238, 238, 0.5);
+}
+
+#progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #F2622E;
+}
