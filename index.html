@@ -3,48 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poornata Game & Admin</title>
+    <title>Poornata Game World</title>
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="admin-style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
-<body class="game-mode">
+<body class="admin-view">
 
-    <div id="game-container"></div>
+    <div id="game-container">
+        </div>
 
-    <div id="admin-ui-overlay">
+    <div id="admin-overlay">
         <header class="admin-header">
-            <img src="NEW Seamex logo.png" alt="Seamex" class="admin-logo">
-            <h1 class="graffiti-title">POORNATA ADMIN</h1>
-            <button id="togglePlayMode" class="graffiti-btn">START GAME</button>
+            <img src="NEW Seamex logo.png" alt="Seamex" class="seamex-logo">
+            <h1 class="graffiti-text">POORNATA</h1>
+            <button id="modeToggle" class="graffiti-btn">SWITCH TO PLAY MODE</button>
         </header>
 
-        <div id="admin-panel-content">
-            <div class="stat-card">
-                <h2 class="graffiti-text">DAILY SCORE</h2>
-                <div class="score-display-main" id="user-actual-score">0</div>
-                <button id="shareNowBtn" class="graffiti-btn share-btn">SHARE NOW</button>
+        <div id="admin-main-ui">
+            <div class="score-card">
+                <h2 class="graffiti-text">DAILY HIGH SCORE</h2>
+                <div id="live-score-val" class="big-score">0</div>
+                <button id="shareNowBtn" class="graffiti-btn share-cta">SHARE SCORE NOW</button>
             </div>
             
-            <div class="theme-blocks">
-                <img src="block-1.png" class="ui-block">
-                <img src="block-2.png" class="ui-block">
+            <div class="block-decor">
+                <img src="block-1.png" class="ui-block-img">
+                <img src="block-2.png" class="ui-block-img">
             </div>
         </div>
 
-        <img src="character.png" alt="AVA" class="admin-character">
+        <img src="character.png" alt="AVA" class="character-guide">
     </div>
 
     <div id="capture-container">
         <img src="NEW Seamex logo.png" class="cap-logo">
-        <div class="cap-content">
-            <h2 class="graffiti-text">POORNATA SCORE</h2>
-            <div id="capture-score-val">0</div>
-            <p id="capture-date"></p>
+        <div class="cap-body">
+            <h2 class="graffiti-text">DAILY SCORE</h2>
+            <div id="cap-score-display">0</div>
+            <p id="cap-date-display"></p>
         </div>
-        <img src="character.png" class="cap-char">
-        <img src="block-2.png" class="cap-footer">
+        <img src="character.png" class="cap-character">
+        <img src="block-2.png" class="cap-footer-block">
     </div>
 
-    <script src="script.js"></script> <script src="admin-script.js"></script> </body>
+    <script src="script.js"></script>
+    <script src="admin-script.js"></script>
+</body>
 </html>
