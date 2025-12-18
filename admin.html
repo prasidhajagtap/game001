@@ -2,27 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Stats - game001</title>
+    <title>Dashboard - game001</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body style="padding: 20px;">
-    <h2 class="section_title">Your Progress</h2>
-    <div id="stats" style="background: white; padding: 20px; border-radius: 10px;">
-        <p><strong>Highest Score:</strong> <span id="hi">0</span></p>
-        <hr>
-        <h3>Last 3 Games:</h3>
-        <ul id="history"></ul>
+<body style="padding: 30px; background: #f1f0f7;">
+    <div class="modal" style="width: 100%; max-width: 400px; margin: auto;">
+        <h2 class="section_title">My Performance</h2>
+        <div style="background: #FCF4DC; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <p style="margin: 0; color: #F2622E; font-weight: 800;">ALL TIME HIGH</p>
+            <h1 id="hi" style="margin: 0; font-size: 40px;">0</h1>
+        </div>
+        
+        <h3 style="text-align: left; color: #65657c;">Last 3 Scores</h3>
+        <div id="history-box" style="text-align: left;"></div>
+        
+        <button class="btn" style="width: 100%;" onclick="location.href='index.html'">BACK TO GAME</button>
     </div>
-    <button class="btn" onclick="location.href='index.html'">Back to Play</button>
 
     <script>
         const user = JSON.parse(localStorage.getItem('game001_user'));
         if(user) {
             document.getElementById('hi').innerText = user.highScore;
-            user.history.forEach(g => {
-                const li = document.createElement('li');
-                li.innerText = `${g.date}: ${g.score} points`;
-                document.getElementById('history').appendChild(li);
+            const container = document.getElementById('history-box');
+            user.history.forEach((score, index) => {
+                container.innerHTML += `<p style="border-bottom: 1px solid #ddd; padding: 10px 0;">Attempt ${index + 1}: <strong>${score} pts</strong></p>`;
             });
         }
     </script>
