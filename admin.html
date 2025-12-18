@@ -2,45 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard - game001</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - game001</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .admin-container { padding: 25px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { background-color: #FCF4DC !important; color: #525252; padding: 12px; }
-        td { border-bottom: 1px solid #eaeaea; padding: 10px; text-align: center; }
+        .profile-card { background: white; margin: 20px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .score-list { list-style: none; padding: 0; }
+        .score-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .high-score-badge { background: #FCF4DC; color: #F2622E; padding: 15px; border-radius: 10px; font-weight: 800; font-size: 20px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
-    <div class="admin-container">
-        <h2 class="section_title">Admin Game Analytics</h2>
-        <table id="adminTable">
-            <thead>
-                <tr>
-                    <th>Player</th>
-                    <th>Poornata ID</th>
-                    <th>Last Played</th>
-                    <th>Top 3 Scores</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+    <div class="profile-card">
+        <h2 id="welcomeName" class="section_title">Player Profile</h2>
+        <p id="pID" style="color: #969696;"></p>
+        
+        <div class="high-score-badge">
+            🏆 Highest Score: <span id="highScore">0</span>
+        </div>
+
+        <h3>Last 3 Games</h3>
+        <ul id="historyList" class="score-list"></ul>
+        
+        <button onclick="location.href='index.html'" class="btn">Back to Game</button>
     </div>
 
     <script>
-        const user = JSON.parse(localStorage.getItem('currentUser'));
-        const tbody = document.querySelector('#adminTable tbody');
-        
+        const user = JSON.parse(localStorage.getItem('game001_user'));
         if(user) {
-            const row = `<tr>
-                <td>${user.name}</td>
-                <td>${user.pid}</td>
-                <td>${new Date(user.lastPlayed).toLocaleDateString()}</td>
-                <td>${user.scores.join(', ') || 'N/A'}</td>
-            </tr>`;
-            tbody.innerHTML = row;
+            document.getElementById('welcomeName').innerText = "Hello, " + user.name;
+            document.getElementById('pID').innerText = "Poornata ID: " + user.pid;
+            document.getElementById('highScore').innerText = user.highScore;
+            
+            const list = document.getElementById('historyList');
+            user.history.forEach(game => {
+                const li = document.createElement('li');
+                li.className = 'score-item';
+                li.innerHTML = `<span>${game.date}</span> <strong>${game.score} pts</strong>`;
+                list.appendChild(li);
+            });
         } else {
-            tbody.innerHTML = "<tr><td colspan='4'>No data found</td></tr>";
+            document.body.innerHTML = "<h2>Please play a game first to see data.</h2>";
         }
     </script>
 </body>
