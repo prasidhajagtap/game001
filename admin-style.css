@@ -1,86 +1,89 @@
 /* admin-style.css */
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: url('bg1.jpg') no-repeat center center fixed;
+#admin-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    background: url('bg1.jpg') no-repeat center center;
     background-size: cover;
-    font-family: 'Segoe UI', sans-serif;
-    color: white;
-    overflow-x: hidden;
+    transition: 0.5s all ease;
+    pointer-events: none; /* Allow play through transparency */
 }
 
-.admin-wrapper {
+/* PLAY MODE STATE */
+body.play-view #admin-overlay {
+    background: transparent;
+}
+body.play-view #admin-main-ui {
+    display: none;
+}
+
+/* INTERACTIVE ELEMENTS */
+.seamex-logo, .graffiti-btn, .score-card {
+    pointer-events: auto;
+}
+
+.admin-header {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 20px 40px;
 }
 
-.admin-logo {
-    width: 200px;
-    margin-bottom: 10px;
-}
+.seamex-logo { width: 140px; }
 
 .graffiti-text {
     font-family: 'Permanent Marker', cursive;
     color: #FFD700;
-    font-size: 3rem;
     text-shadow: 4px 4px 0px #000;
     margin: 0;
 }
 
-.stat-card {
-    background: rgba(0, 0, 0, 0.7);
-    border: 4px solid #FFD700;
-    border-radius: 20px;
+.score-card {
+    background: rgba(0,0,0,0.8);
+    border: 5px solid #3d2b1f;
+    border-radius: 30px;
+    width: 320px;
+    margin: 100px auto;
     padding: 30px;
     text-align: center;
-    width: 90%;
-    max-width: 400px;
-    margin-top: 30px;
 }
 
-.score-box p { font-size: 1rem; margin-bottom: 0; }
-.score-box span {
+.big-score {
     font-family: 'Permanent Marker', cursive;
     font-size: 5rem;
-    color: #FFD700;
+    color: #fff;
 }
 
-.share-trigger {
+.graffiti-btn {
     background: #FFD700;
     border: none;
-    padding: 15px 30px;
+    padding: 12px 24px;
     font-family: 'Permanent Marker', cursive;
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     cursor: pointer;
-    border-radius: 10px;
-    transition: 0.3s;
+    box-shadow: 4px 4px 0px #3d2b1f;
 }
 
-.share-trigger:hover { transform: scale(1.1) rotate(-3deg); }
-
-.floating-ava {
-    position: fixed;
+.character-guide {
+    position: absolute;
     bottom: 20px;
     right: 20px;
-    width: 150px;
-    filter: drop-shadow(0 0 10px #FFD700);
+    width: 140px;
 }
 
-/* Capture Styles */
+/* SCREENSHOT BUILDER (HIDDEN) */
 #capture-container {
     position: absolute;
     left: -9999px;
     width: 600px;
     height: 600px;
-    background: url('bg1.jpg');
-    background-size: cover;
+    background: url('bg1.jpg') center/cover;
 }
-
-.capture-logo { position: absolute; top: 20px; left: 20px; width: 140px; }
-.capture-body { text-align: center; margin-top: 180px; }
-#score-display { font-family: 'Permanent Marker'; font-size: 120px; color: #FFD700; text-shadow: 4px 4px #000; }
-.capture-character { position: absolute; bottom: 80px; right: 20px; width: 120px; z-index: 5; }
-.capture-footer { position: absolute; bottom: 0; width: 100%; height: 100px; }
+.cap-logo { position: absolute; top: 20px; left: 20px; width: 150px; }
+.cap-body { text-align: center; padding-top: 180px; }
+#cap-score-display { font-family: 'Permanent Marker'; font-size: 110px; color: #FFD700; text-shadow: 4px 4px #000; }
+.cap-character { position: absolute; bottom: 80px; right: 20px; width: 120px; }
+.cap-footer-block { position: absolute; bottom: 0; width: 100%; height: 100px; object-fit: cover; }
