@@ -1,145 +1,38 @@
-/* Import Open Sans to match your app */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
-
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
-    -webkit-tap-highlight-color: transparent; 
-    font-family: 'Open Sans', sans-serif !important; 
+/* --- POORNATA THEME UPDATES --- */
+:root {
+    --graffiti-yellow: #FFD700;
+    --urban-black: #1a1a1a;
 }
 
 body {
-    background-color: #FCFCFC; /* App background */
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    color: #434242;
+    background: url('bg1.jpg') no-repeat center center fixed !important;
+    background-size: cover !important;
 }
 
-#game-container {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-    height: 100%;
-    background: #ffffff;
-    box-shadow: 0 0 20px rgba(0,0,0,0.05);
-    overflow: hidden;
+/* Update Game Cards to use the Block assets */
+.game-card {
+    background: url('block-1.jpg') no-repeat center bottom;
+    background-size: contain;
+    border: 3px solid #3d2b1f;
+    font-family: 'Permanent Marker', cursive; /* Add this Google Font in HTML */
+    color: var(--graffiti-yellow);
+    padding: 20px;
 }
 
-canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, #f1f0f7, #ffffff);
-    touch-action: none;
-}
-
-/* UI Elements - Based on your .jobLabel and .jobContent */
-.ui {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    z-index: 10;
-    font-weight: 700;
-    color: #F2622E; /* Your Brand Orange */
-    font-size: 14px;
-    pointer-events: none;
-    background: rgba(255,255,255,0.8);
-    padding: 10px;
-    border-radius: 8px;
-}
-
-#user-display {
-    color: #969696; /* Matching your .jobLabel color */
-    font-size: 11px;
-    margin-bottom: 2px;
-}
-
-/* Menu & Modals - Based on .abg_box and .page-wrapper */
-.menu {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    background: #FCFCFC;
-    padding: 30px;
-    border-radius: 20px;
-    width: 85%;
-    z-index: 20;
-    border: 1px solid #eaeaea;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-h1.retro-text, h2.retro-text { 
-    color: #434242; 
-    font-weight: 800; 
-    font-size: 20px; 
-    margin-bottom: 20px;
+/* Graffiti Spray effect for Titles */
+h1, .admin-title {
     text-transform: uppercase;
+    color: var(--graffiti-yellow);
+    text-shadow: 4px 4px 0px #000;
+    letter-spacing: 3px;
 }
 
-/* Input Fields - Based on your .sp-peoplepicker and .ms-inputBox */
-input {
-    width: 100%;
-    padding: 12px 15px;
-    margin: 8px 0;
-    font-size: 14px;
-    background-color: #f1f0f7 !important;
-    color: #434242;
-    border: none !important;
-    border-radius: 10px;
-    outline: none;
-}
-
-/* Buttons - Based on your .btn and .mpeCommandPnael button */
-button {
-    background-color: #F2622E !important; /* Brand Orange */
-    color: #ffffff !important;
-    border: none !important;
-    padding: 12px 20px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 15px;
-    border-radius: 20px !important;
-    box-shadow: 0 4px 6px rgba(242, 98, 46, 0.2);
-    transition: all 0.2s ease;
-}
-
-button:active { 
-    transform: scale(0.98); 
-    background-color: #d14d1b !important;
-}
-
-/* Graffiti - Using your Orange/Grey palette */
-.graffiti {
-    position: absolute;
-    font-size: 22px;
-    color: #F2622E;
-    font-weight: 800;
-    text-shadow: 2px 2px 0px #FCF4DC;
-    pointer-events: none;
+/* Character positioning */
+.admin-character {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 120px;
+    content: url('character.png');
     z-index: 100;
-    animation: floatUp 0.8s ease-out forwards;
-}
-
-@keyframes floatUp {
-    0% { transform: scale(0.8); opacity: 0; }
-    20% { opacity: 1; transform: scale(1.1); }
-    100% { transform: translateY(-80px) scale(1); opacity: 0; }
-}
-
-.admin-link a { 
-    color: #969696; 
-    font-size: 12px; 
-    text-decoration: none; 
-    display: block; 
-    margin-top: 20px; 
-    font-weight: 600;
 }
