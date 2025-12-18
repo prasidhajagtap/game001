@@ -2,35 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Island Jump | Poornata</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poornata Admin - Graffiti Theme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-    <div id="game-container">
-        <div id="graffiti-container"></div>
-        
-        <div class="ui">
-            <div id="user-display"></div>
-            SCORE: <span id="scoreVal">0</span>
-        </div>
 
-        <canvas id="gameCanvas"></canvas>
-        
-        <div id="reg-form" class="menu" style="display: none;">
-            <h2 class="retro-text">NEW PLAYER</h2>
-            <input type="text" id="reg-name" placeholder="NAME" autocomplete="off">
-            <input type="text" id="reg-id" placeholder="POORNATA ID" autocomplete="off">
-            <button onclick="registerUser()">INITIALIZE</button>
-        </div>
+    <div class="admin-layout">
+        <header>
+            <img src="NEW Seamex logo.png" alt="Seamex Logo" class="logo">
+            <h1 class="admin-title">Poornata Admin Panel</h1>
+        </header>
 
-        <div id="menu" class="menu">
-            <h1 class="retro-text">ISLAND JUMP</h1>
-            <button id="startBtn">START MISSION</button>
-            <div id="leaderboard"></div>
-            <p class="admin-link"><a href="admin.html">VIEW ADMIN STATS</a></p>
+        <main class="dashboard">
+            <div class="game-card">
+                <h2>GAME: ISLAND RUN</h2>
+                <div class="score-container">
+                    <p>TODAY'S TOP SCORE: <span id="user-actual-score">4560</span></p>
+                </div>
+                <button id="shareNowBtn" class="graffiti-btn">SHARE SCORE NOW</button>
+            </div>
+        </main>
+
+        <img src="character.png" alt="Guide" class="admin-character">
+    </div>
+
+    <div id="capture-container">
+        <img src="NEW Seamex logo.png" class="share-logo">
+        <div class="share-content">
+            <h3 class="share-label">DAILY PROGRESS</h3>
+            <h1 id="score-display">0000</h1>
+            <p id="date-display"></p>
+        </div>
+        <img src="character.png" class="share-character">
+        <div class="share-blocks">
+            <img src="block-2.jpg" class="island-footer">
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
