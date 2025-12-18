@@ -10,15 +10,22 @@
     <div id="login-screen" class="overlay">
         <div class="modal">
             <h2 class="section_title">Welcome Player</h2>
-            <input type="text" id="username" placeholder="Enter Name" class="form-control">
-            <input type="text" id="poornataId" placeholder="Enter Poornata ID" class="form-control">
+            <input type="text" id="username" placeholder="Enter Name (Alphabets Only)" class="form-control" 
+                   oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '');">
+            <input type="text" id="poornataId" placeholder="Enter Poornata ID (Numbers Only)" class="form-control" 
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '');">
             <button id="start-btn" class="btn">START GAME</button>
         </div>
     </div>
+
     <div id="game-container">
-        <div class="score-box">Score: <span id="score">0</span></div>
+        <div class="score-box">
+            Score: <span id="score">0</span><br>
+            <small id="high-score-display" style="font-size: 12px; color: #F2622E;"></small>
+        </div>
         <canvas id="gameCanvas"></canvas>
     </div>
+
     <script src="game.js"></script>
 </body>
 </html>
