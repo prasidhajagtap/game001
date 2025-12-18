@@ -248,3 +248,117 @@ body, html {
     height: 100%;
     background: #F2622E;
 }
+body, html {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    font-family: sans-serif;
+    background: #f0f0f0;
+}
+
+#game-header {
+    background: #F2622E;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 24px;
+    font-weight: bold;
+    width: 100%;
+}
+
+#game-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: calc(100vh - 54px);
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.ui-top {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 50;
+}
+
+.score-box {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    color: #F2622E;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#pause-btn {
+    background: #F2622E;
+    border: 2px solid white;
+    color: white;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#progress-container {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 6px;
+    background: rgba(0,0,0,0.1);
+    z-index: 40;
+}
+
+#progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #F2622E;
+}
+
+.overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modal {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    width: 85%;
+    max-width: 350px;
+    border-top: 10px solid #F2622E;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.btn {
+    background: #F2622E;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+}
