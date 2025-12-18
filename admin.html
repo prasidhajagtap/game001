@@ -2,47 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile - game001</title>
+    <title>My Stats - game001</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .profile-card { background: white; margin: 20px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .score-list { list-style: none; padding: 0; }
-        .score-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
-        .high-score-badge { background: #FCF4DC; color: #F2622E; padding: 15px; border-radius: 10px; font-weight: 800; font-size: 20px; margin-bottom: 20px; }
-    </style>
 </head>
-<body>
-    <div class="profile-card">
-        <h2 id="welcomeName" class="section_title">Player Profile</h2>
-        <p id="pID" style="color: #969696;"></p>
-        
-        <div class="high-score-badge">
-            🏆 Highest Score: <span id="highScore">0</span>
-        </div>
-
-        <h3>Last 3 Games</h3>
-        <ul id="historyList" class="score-list"></ul>
-        
-        <button onclick="location.href='index.html'" class="btn">Back to Game</button>
+<body style="padding: 20px;">
+    <h2 class="section_title">Your Progress</h2>
+    <div id="stats" style="background: white; padding: 20px; border-radius: 10px;">
+        <p><strong>Highest Score:</strong> <span id="hi">0</span></p>
+        <hr>
+        <h3>Last 3 Games:</h3>
+        <ul id="history"></ul>
     </div>
+    <button class="btn" onclick="location.href='index.html'">Back to Play</button>
 
     <script>
         const user = JSON.parse(localStorage.getItem('game001_user'));
         if(user) {
-            document.getElementById('welcomeName').innerText = "Hello, " + user.name;
-            document.getElementById('pID').innerText = "Poornata ID: " + user.pid;
-            document.getElementById('highScore').innerText = user.highScore;
-            
-            const list = document.getElementById('historyList');
-            user.history.forEach(game => {
+            document.getElementById('hi').innerText = user.highScore;
+            user.history.forEach(g => {
                 const li = document.createElement('li');
-                li.className = 'score-item';
-                li.innerHTML = `<span>${game.date}</span> <strong>${game.score} pts</strong>`;
-                list.appendChild(li);
+                li.innerText = `${g.date}: ${g.score} points`;
+                document.getElementById('history').appendChild(li);
             });
-        } else {
-            document.body.innerHTML = "<h2>Please play a game first to see data.</h2>";
         }
     </script>
 </body>
