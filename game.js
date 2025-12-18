@@ -20,7 +20,10 @@ function resize() {
     canvas.width = width;
     canvas.height = height;
 }
-
+window.onload = () => {
+    // All your existing game.js code goes here
+    console.log("Game assets loaded and ready!");
+};
 window.addEventListener('resize', resize);
 resize();
 
