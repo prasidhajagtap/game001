@@ -9,9 +9,11 @@ let width, height, player, platforms, score = 0, gameActive = false, isPaused = 
 let highScore = 0;
 let playerName = "";
 
+// ALL IMAGES SET TO .PNG
 const charImg = new Image(); charImg.src = 'character.png';
-const plat1 = new Image(); plat1.src = 'block-1.jpg';
-const plat2 = new Image(); plat2.src = 'block-2.jpg';
+const plat1 = new Image(); plat1.src = 'block-1.png';
+const plat2 = new Image(); plat2.src = 'block-2.png';
+const bgImg = new Image(); bgImg.src = 'bg1.png'; 
 
 function checkUserSession() {
     const savedUser = localStorage.getItem('game001_user');
@@ -42,9 +44,9 @@ document.getElementById('start-btn').onclick = function() {
 };
 
 function resize() {
-    const container = document.getElementById('game-container');
-    width = container.clientWidth;
-    height = container.clientHeight - document.getElementById('game-header').offsetHeight;
+    const headerH = document.getElementById('game-header').offsetHeight;
+    width = window.innerWidth > 600 ? 600 : window.innerWidth;
+    height = window.innerHeight - headerH;
     canvas.width = width;
     canvas.height = height;
 }
@@ -54,9 +56,9 @@ resize();
 
 function initGame() {
     score = 0;
-    // Scaled player size for better visibility
-    player = { x: width/2 - 25, y: height - 150, w: 55, h: 55, vx: 0, vy: 0 };
+    player = { x: width/2 - 30, y: height - 160, w: 60, h: 60, vx: 0, vy: 0 };
     platforms = [];
+    // Starter platform
     platforms.push({ x: width/2 - 60, y: height - 80, w: 120, h: 40, img: plat1, speed: 0 });
 
     for(let i=1; i<7; i++) {
@@ -77,7 +79,6 @@ function addPlatform(yPos) {
     });
 }
 
-// Pause Controls
 document.getElementById('pause-btn').onclick = () => {
     isPaused = true;
     pauseScreen.style.display = 'flex';
@@ -85,13 +86,13 @@ document.getElementById('pause-btn').onclick = () => {
 document.getElementById('resume-btn').onclick = () => {
     isPaused = false;
     pauseScreen.style.display = 'none';
-    requestAnimationFrame(animate);
+    animate();
 };
 
 function handleInput(e) {
     if (isPaused || !gameActive) return;
     const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-    player.vx = clientX < width / 2 ? -7 : 7;
+    player.vx = clientX < width / 2 ? -8 : 8;
 }
 
 window.addEventListener('mousedown', handleInput);
@@ -102,7 +103,7 @@ window.addEventListener('touchend', () => player.vx = 0);
 function update() {
     if(!gameActive || isPaused) return;
 
-    player.vy += 0.4; // Gravity
+    player.vy += 0.4;
     player.y += player.vy;
     player.x += player.vx;
 
@@ -114,9 +115,9 @@ function update() {
         if(p.x <= 0 || p.x + p.w >= width) p.speed *= -1;
 
         if (player.vy > 0 && 
-            player.x + 15 < p.x + p.w && player.x + player.w - 15 > p.x &&
-            player.y + player.h > p.y && player.y + player.h < p.y + 15) {
-            player.vy = -13; // Jump Strength
+            player.x + 20 < p.x + p.w && player.x + player.w - 20 > p.x &&
+            player.y + player.h > p.y && player.y + player.h < p.y + 20) {
+            player.vy = -13;
         }
     });
 
@@ -143,12 +144,14 @@ function update() {
 
 function draw() {
     ctx.clearRect(0, 0, width, height);
+    // Draw background image on canvas
+    ctx.drawImage(bgImg, 0, 0, width, height);
     platforms.forEach(p => ctx.drawImage(p.img, p.x, p.y, p.w, p.h));
     ctx.drawImage(charImg, player.x, player.y, player.w, player.h);
 }
 
 function animate() {
-    if(isPaused || !gameActive) return;
+    if(!gameActive || isPaused) return;
     update();
     draw();
     requestAnimationFrame(animate);
@@ -159,8 +162,6 @@ function endGame() {
     let user = JSON.parse(localStorage.getItem('game001_user'));
     if (score > user.highScore) user.highScore = score;
     localStorage.setItem('game001_user', JSON.stringify(user));
-
-    // Styled Alert
     alert(`GAME OVER, ${playerName}!\nScore: ${score}\nHigh Score: ${user.highScore}`);
     location.reload();
 }
