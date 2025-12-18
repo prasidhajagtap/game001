@@ -1,26 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+/* Import Open Sans to match your app */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    -webkit-tap-highlight-color: transparent; 
+    font-family: 'Open Sans', sans-serif !important; 
+}
 
 body {
-    background-color: #000;
-    font-family: 'Press+Start+2P', cursive;
+    background-color: #FCFCFC; /* App background */
     height: 100vh;
     width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    color: #434242;
 }
 
 #game-container {
     position: relative;
     width: 100%;
-    max-width: 500px; /* Perfect for both Phone and Tablet */
+    max-width: 500px;
     height: 100%;
-    max-height: 100vh;
-    border: 4px solid #0ff;
-    background: #000;
+    background: #ffffff;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
     overflow: hidden;
 }
 
@@ -28,78 +34,112 @@ canvas {
     display: block;
     width: 100%;
     height: 100%;
-    touch-action: none; /* Prevents browser scroll while playing */
+    background: linear-gradient(to bottom, #f1f0f7, #ffffff);
+    touch-action: none;
 }
 
+/* UI Elements - Based on your .jobLabel and .jobContent */
 .ui {
     position: absolute;
     top: 20px;
     left: 20px;
     z-index: 10;
-    color: #0ff;
-    text-shadow: 2px 2px #f0f;
-    font-size: 12px;
+    font-weight: 700;
+    color: #F2622E; /* Your Brand Orange */
+    font-size: 14px;
     pointer-events: none;
+    background: rgba(255,255,255,0.8);
+    padding: 10px;
+    border-radius: 8px;
 }
 
+#user-display {
+    color: #969696; /* Matching your .jobLabel color */
+    font-size: 11px;
+    margin-bottom: 2px;
+}
+
+/* Menu & Modals - Based on .abg_box and .page-wrapper */
 .menu {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    background: rgba(0, 0, 0, 0.9);
+    background: #FCFCFC;
     padding: 30px;
-    border: 3px solid #f0f;
+    border-radius: 20px;
     width: 85%;
     z-index: 20;
-    box-shadow: 0 0 15px #f0f;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-.retro-text { color: #f0f; text-shadow: 2px 2px #0ff; margin-bottom: 20px; font-size: 18px; }
+h1.retro-text, h2.retro-text { 
+    color: #434242; 
+    font-weight: 800; 
+    font-size: 20px; 
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
 
+/* Input Fields - Based on your .sp-peoplepicker and .ms-inputBox */
 input {
     width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    font-family: 'Press+Start+2P';
-    font-size: 10px;
-    background: #111;
-    color: #0ff;
-    border: 2px solid #0ff;
+    padding: 12px 15px;
+    margin: 8px 0;
+    font-size: 14px;
+    background-color: #f1f0f7 !important;
+    color: #434242;
+    border: none !important;
+    border-radius: 10px;
     outline: none;
 }
 
+/* Buttons - Based on your .btn and .mpeCommandPnael button */
 button {
-    background: #0ff;
-    color: #000;
-    border: none;
-    padding: 15px;
-    font-family: 'Press+Start+2P';
-    font-size: 12px;
+    background-color: #F2622E !important; /* Brand Orange */
+    color: #ffffff !important;
+    border: none !important;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
     width: 100%;
-    margin-top: 10px;
-    box-shadow: 4px 4px 0 #f0f;
-    transition: 0.1s;
+    margin-top: 15px;
+    border-radius: 20px !important;
+    box-shadow: 0 4px 6px rgba(242, 98, 46, 0.2);
+    transition: all 0.2s ease;
 }
 
-button:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #f0f; }
+button:active { 
+    transform: scale(0.98); 
+    background-color: #d14d1b !important;
+}
 
+/* Graffiti - Using your Orange/Grey palette */
 .graffiti {
     position: absolute;
-    font-size: 24px;
-    color: #fff;
-    text-shadow: 3px 3px #f0f, -3px -3px #0ff;
-    font-weight: bold;
+    font-size: 22px;
+    color: #F2622E;
+    font-weight: 800;
+    text-shadow: 2px 2px 0px #FCF4DC;
     pointer-events: none;
-    animation: graffitiMove 0.8s ease-out forwards;
+    z-index: 100;
+    animation: floatUp 0.8s ease-out forwards;
 }
 
-@keyframes graffitiMove {
-    0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
-    50% { opacity: 1; transform: scale(1.2) rotate(5deg); }
-    100% { transform: translateY(-150px) scale(1) rotate(0deg); opacity: 0; }
+@keyframes floatUp {
+    0% { transform: scale(0.8); opacity: 0; }
+    20% { opacity: 1; transform: scale(1.1); }
+    100% { transform: translateY(-80px) scale(1); opacity: 0; }
 }
 
-.admin-link a { color: #0ff; font-size: 8px; text-decoration: none; display: block; margin-top: 15px; }
+.admin-link a { 
+    color: #969696; 
+    font-size: 12px; 
+    text-decoration: none; 
+    display: block; 
+    margin-top: 20px; 
+    font-weight: 600;
+}
