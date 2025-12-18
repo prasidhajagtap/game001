@@ -1,14 +1,26 @@
-// script.js (Game Entry)
+// script.js
 
-// This represents your actual game logic
-let score = 0;
+// This script simulates your Game Engine (Phaser/Unity/etc.)
+console.log("Game Engine Loaded.");
 
-function increaseScore(points) {
-    score += points;
-    // Update the Admin UI score element
-    const scoreElement = document.getElementById('live-score-val');
-    if (scoreElement) scoreElement.innerText = score;
-}
+let gameScore = 0;
+const gameArea = document.getElementById('game-container');
+const uiScoreDisplay = document.getElementById('ui-score');
 
-// Example: Simulating points being added when playing
-console.log("Game Loaded. Targeting #game-container");
+// === TEST INTERACTION ===
+// Click anywhere on the black screen (in Play Mode) to simulate scoring
+gameArea.addEventListener('click', () => {
+    console.log("Game Click Detected!");
+    
+    // 1. Logic: Increase Score
+    gameScore += 100;
+    
+    // 2. Visual: Change background color slightly to prove interaction works
+    const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+    gameArea.style.backgroundColor = randomColor;
+
+    // 3. Callback: Update the Admin UI Score
+    if (uiScoreDisplay) {
+        uiScoreDisplay.innerText = gameScore.toLocaleString();
+    }
+});
