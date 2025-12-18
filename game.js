@@ -20,8 +20,8 @@ function imageLoaded() {
 }
 
 const charImg = new Image(); charImg.src = 'character.png'; charImg.onload = imageLoaded;
-const plat1 = new Image(); plat1.src = 'block-1.png'; plat1.onload = imageLoaded;
-const plat2 = new Image(); plat2.src = 'block-2.png'; plat2.onload = imageLoaded;
+const plat1 = new Image(); plat1.src = 'block-1.jpg'; plat1.onload = imageLoaded;
+const plat2 = new Image(); plat2.src = 'block-2.jpg'; plat2.onload = imageLoaded;
 
 // 1. Persistence Logic (90 Days)
 function checkLogin() {
