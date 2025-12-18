@@ -3,29 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jump Master - game001</title>
+    <title>Poornata Jump</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="game-header">Poornata Jump</div>
+    
     <div id="login-screen" class="overlay">
         <div class="modal">
             <h2 class="section_title">Welcome Player</h2>
-            <input type="text" id="username" placeholder="Enter Name (Alphabets Only)" class="form-control" 
-                   oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '');">
-            <input type="text" id="poornataId" placeholder="Enter Poornata ID (Numbers Only)" class="form-control" 
-                   oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            <input type="text" id="username" placeholder="Enter Name (Alphabets Only)" class="form-control">
+            <input type="text" id="poornataId" placeholder="Enter Poornata ID (Numbers Only)" class="form-control">
             <button id="start-btn" class="btn">START GAME</button>
         </div>
     </div>
 
+    <div id="pause-screen" class="overlay" style="display:none;">
+        <div class="modal">
+            <h2 class="section_title">Paused</h2>
+            <button id="resume-btn" class="btn">RESUME</button>
+        </div>
+    </div>
+
     <div id="game-container">
-        <div class="score-box">
-            Score: <span id="score">0</span><br>
-            <small id="high-score-display" style="font-size: 12px; color: #F2622E;"></small>
+        <div class="ui-top">
+            <div class="score-box">Score: <span id="score">0</span></div>
+            <button id="pause-btn">II</button>
+        </div>
+        <div id="progress-container">
+            <div id="progress-bar"></div>
         </div>
         <canvas id="gameCanvas"></canvas>
     </div>
-
     <script src="game.js"></script>
 </body>
 </html>
