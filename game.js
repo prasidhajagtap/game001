@@ -109,8 +109,14 @@ function update() {
 
 function draw() {
     ctx.clearRect(0, 0, width, height);
-    platforms.forEach(p => ctx.drawImage(p.type, p.x, p.y, p.w, p.h));
-    ctx.drawImage(charImg, player.x, player.y, player.w, player.h);
+    // Draw platforms as green boxes
+    platforms.forEach(p => {
+        ctx.fillStyle = "green";
+        ctx.fillRect(p.x, p.y, p.w, p.h);
+    });
+    // Draw player as a red box
+    ctx.fillStyle = "red";
+    ctx.fillRect(player.x, player.y, player.w, player.h);
 }
 
 function animate() {
