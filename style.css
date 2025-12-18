@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+    background-color: #000;
+    font-family: 'Press+Start+2P', cursive;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#game-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px; /* Perfect for both Phone and Tablet */
+    height: 100%;
+    max-height: 100vh;
+    border: 4px solid #0ff;
+    background: #000;
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none; /* Prevents browser scroll while playing */
+}
+
+.ui {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    color: #0ff;
+    text-shadow: 2px 2px #f0f;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px;
+    border: 3px solid #f0f;
+    width: 85%;
+    z-index: 20;
+    box-shadow: 0 0 15px #f0f;
+}
+
+.retro-text { color: #f0f; text-shadow: 2px 2px #0ff; margin-bottom: 20px; font-size: 18px; }
+
+input {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    font-family: 'Press+Start+2P';
+    font-size: 10px;
+    background: #111;
+    color: #0ff;
+    border: 2px solid #0ff;
+    outline: none;
+}
+
+button {
+    background: #0ff;
+    color: #000;
+    border: none;
+    padding: 15px;
+    font-family: 'Press+Start+2P';
+    font-size: 12px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    box-shadow: 4px 4px 0 #f0f;
+    transition: 0.1s;
+}
+
+button:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #f0f; }
+
+.graffiti {
+    position: absolute;
+    font-size: 24px;
+    color: #fff;
+    text-shadow: 3px 3px #f0f, -3px -3px #0ff;
+    font-weight: bold;
+    pointer-events: none;
+    animation: graffitiMove 0.8s ease-out forwards;
+}
+
+@keyframes graffitiMove {
+    0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+    50% { opacity: 1; transform: scale(1.2) rotate(5deg); }
+    100% { transform: translateY(-150px) scale(1) rotate(0deg); opacity: 0; }
+}
+
+.admin-link a { color: #0ff; font-size: 8px; text-decoration: none; display: block; margin-top: 15px; }
