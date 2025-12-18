@@ -2,40 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Poornata Island Jump</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Island Jump | Poornata</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
-        <div id="graffiti-layer"></div>
+        <div id="graffiti-container"></div>
         
         <div class="ui">
-            <div id="user-tag" style="font-size: 8px; color: #fff; margin-bottom: 5px;"></div>
+            <div id="user-display"></div>
             SCORE: <span id="scoreVal">0</span>
         </div>
 
         <canvas id="gameCanvas"></canvas>
         
-        <div id="reg-screen" class="modal" style="display: none;">
-            <div class="menu-box">
-                <h2>REGISTRATION</h2>
-                <p>Enter details to save progress</p>
-                <input type="text" id="reg-name" placeholder="Name">
-                <input type="text" id="reg-id" placeholder="Poornata ID">
-                <button id="saveUserBtn">SAVE & START</button>
-            </div>
+        <div id="reg-form" class="menu" style="display: none;">
+            <h2 class="retro-text">NEW PLAYER</h2>
+            <input type="text" id="reg-name" placeholder="NAME" autocomplete="off">
+            <input type="text" id="reg-id" placeholder="POORNATA ID" autocomplete="off">
+            <button onclick="registerUser()">INITIALIZE</button>
         </div>
 
-        <div id="main-menu" class="modal">
-            <div class="menu-box">
-                <h1 class="retro-text">ISLAND JUMP</h1>
-                <button id="startBtn">START MISSION</button>
-                <div id="leaderboard"></div>
-                <div class="nav-links">
-                    <a href="admin.html">View Admin Stats</a>
-                </div>
-            </div>
+        <div id="menu" class="menu">
+            <h1 class="retro-text">ISLAND JUMP</h1>
+            <button id="startBtn">START MISSION</button>
+            <div id="leaderboard"></div>
+            <p class="admin-link"><a href="admin.html">VIEW ADMIN STATS</a></p>
         </div>
     </div>
     <script src="script.js"></script>
