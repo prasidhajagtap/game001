@@ -147,6 +147,13 @@ canvas {
     height: 40px;
     font-weight: bold;
     cursor: pointer;
+    /* Replace '.pause-btn' with the actual ID or Class of your pause button */
+}
+.pause-btn, #pauseButton {
+    position: relative; 
+    z-index: 9999 !important; /* Forces it above other overlapping layers */
+    cursor: pointer;          /* Ensures the mouse looks like a hand */
+    pointer-events: auto;     /* Re-enables clicks if they were disabled */
 }
 body, html {
     margin: 0;
