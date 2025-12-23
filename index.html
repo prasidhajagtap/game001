@@ -3,28 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jump Master - game001</title>
+    <title>Seamex Seamless Dash</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="login-screen">
-        <div class="login-container">
-            <h1>JUMP MASTER</h1>
-            <input type="text" id="userName" placeholder="Enter Name (Alphabets Only)" autocomplete="off">
-            <input type="number" id="poornataId" placeholder="Enter Poornata ID (Numbers Only)" autocomplete="off">
+
+    <div id="ui-layer">
+        
+        <div id="game-hud" class="hidden">
+            <div id="score-board">Score: <span id="score">0</span></div>
+            <div id="level-board">Level: <span id="level">1</span></div>
+        </div>
+
+        <div id="start-screen">
+            <div class="logo-container">
+                <span class="logo-s">S</span><span class="logo-text">eamex</span>
+                <div class="tagline">seamless experience always</div>
+            </div>
+            
+            <div class="input-group">
+                <label>Employee Name</label>
+                <input type="text" id="player-name" placeholder="Enter Name" autocomplete="off">
+                <span class="error-msg" id="name-error">Letters and spaces only</span>
+            </div>
+
+            <div class="input-group">
+                <label>Poornata ID</label>
+                <input type="tel" id="player-id" placeholder="Enter ID" maxlength="10" autocomplete="off">
+                <span class="error-msg" id="id-error">Numbers only</span>
+            </div>
+
             <button id="start-btn">START GAME</button>
         </div>
-    </div>
 
-    <div id="game-container" style="display: none;">
-        <div id="status-bar">
-            <div id="score-display">Score: 0</div>
-            <div id="level-display">Level: 1</div>
-            <button id="pause-btn">PAUSE</button>
+        <div id="level-modal" class="hidden">
+            <h2>LEVEL UP!</h2>
+            <div class="trivia-box">
+                <h3>Did you know?</h3>
+                <p id="trivia-text">Seamex was established in 2017.</p>
+            </div>
+            <button id="continue-btn">CONTINUE</button>
         </div>
-        <canvas id="gameCanvas"></canvas>
+
+        <div id="game-over-screen" class="hidden">
+            <h1>GAME OVER</h1>
+            <p>Well played, <span id="final-name">User</span>!</p>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <button id="restart-btn">PLAY AGAIN</button>
+        </div>
     </div>
 
-    <script src="game.js"></script>
+    <canvas id="gameCanvas"></canvas>
+
+    <script src="script.js"></script>
 </body>
 </html>
