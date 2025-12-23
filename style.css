@@ -1,419 +1,185 @@
-/* Mobile App Theme Integration */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
-
+/* Core Reset & Layout */
 body, html {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    font-family: 'Open Sans', sans-serif !important;
-    background-color: #FCFCFC;
-}
-
-#game-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    max-width: 600px; /* Limits size on Desktop for better UX */
-    margin: 0 auto;
-    background: #f1f0f7;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    background-color: #f4f4f4; /* Clean corporate background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    touch-action: none; /* Disables browser zoom/scroll */
 }
 
 canvas {
     display: block;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
 }
 
-.overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none; /* Let clicks pass to canvas */
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
 }
 
-.modal {
-    background: #FCFCFC;
-    padding: 30px;
-    border-radius: 20px;
-    text-align: center;
-    width: 80%;
-}
+/* Common UI Elements */
+.hidden { display: none !important; }
 
-.form-control {
-    width: 100%;
-    margin: 10px 0;
-    padding: 12px;
-    border: none !important;
-    background-color: #f1f0f7 !important;
-    border-radius: 10px;
-    box-sizing: border-box;
-}
-
-.btn {
-    background-color: #cbd7e3 !important;
-    color: #2f5878 !important;
+button {
+    background: linear-gradient(45deg, #A01018, #D32F2F);
+    color: white;
     border: none;
-    padding: 10px 25px;
-    border-radius: 20px;
-    font-weight: 700;
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 30px;
     cursor: pointer;
-    margin-top: 15px;
+    box-shadow: 0 4px 15px rgba(160, 16, 24, 0.3);
+    pointer-events: auto;
+    transition: transform 0.1s;
+    text-transform: uppercase;
+    margin-top: 20px;
 }
 
-.section_title {
-    color: #F2622E !important;
+button:active { transform: scale(0.95); }
+
+/* Start Screen Styling */
+#start-screen {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    pointer-events: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    max-width: 90%;
+    width: 350px;
+}
+
+.logo-container {
+    margin-bottom: 30px;
+}
+
+.logo-s {
+    font-size: 50px;
     font-weight: 800;
-    font-size: 22px;
+    background: linear-gradient(180deg, #FFC107 0%, #D32F2F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.score-box {
+.logo-text {
+    font-size: 50px;
+    font-weight: 800;
+    color: #A01018; /* Seamex Deep Red */
+}
+
+.tagline {
+    color: #333;
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-top: -5px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: #A01018;
+}
+
+.error-msg {
+    color: red;
+    font-size: 11px;
+    display: none;
+    margin-top: 5px;
+}
+
+/* HUD */
+#game-hud {
     position: absolute;
     top: 20px;
     left: 20px;
-    font-size: 20px;
-    font-weight: 700;
-    color: #65657c;
-    z-index: 10;
-}
-
-/* Graffiti Animation */
-#graffiti {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 40px;
-    font-weight: 800;
-    color: #F2622E;
+    width: calc(100% - 40px);
+    display: flex;
+    justify-content: space-between;
     pointer-events: none;
-    opacity: 0;
 }
 
-.pop-anim {
-    animation: pop 0.8s ease-out;
-}
-
-@keyframes pop {
-    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-    50% { opacity: 1; }
-    100% { transform: translate(-50%, -150%) scale(1.2); opacity: 0; }
-}
-#game-header {
-    background: #F2622E;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    font-size: 24px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-#progress-container {
-    width: 100%;
-    height: 8px;
-    background: #eee;
-}
-
-#progress-bar {
-    width: 0%;
-    height: 100%;
-    background: #F2622E;
-    transition: width 0.3s;
-}
-
-.ui-top {
-    position: absolute;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    box-sizing: border-box;
-    z-index: 10;
-}
-
-#pause-btn {
-    background: rgba(242, 98, 46, 0.8);
-    border: none;
-    color: white;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
+#score-board, #level-board {
+    font-size: 20px;
     font-weight: bold;
-    cursor: pointer;
-    /* Replace '.pause-btn' with the actual ID or Class of your pause button */
-}
-.pause-btn, #pauseButton {
-    position: relative; 
-    z-index: 9999 !important; /* Forces it above other overlapping layers */
-    cursor: pointer;          /* Ensures the mouse looks like a hand */
-    pointer-events: auto;     /* Re-enables clicks if they were disabled */
-}
-body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: 'Open Sans', sans-serif;
-}
-
-#game-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    max-width: 600px; /* Optimized for mobile feel on desktop */
-    margin: 0 auto;
-    background-image: url('bg1.jpg');
-    background-size: cover;
-    background-position: center;
-}
-
-#game-header {
-    background: #F2622E;
-    color: white;
-    text-align: center;
-    padding: 12px;
-    font-size: 22px;
-    font-weight: 800;
-    text-transform: uppercase;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-/* Fix for Overlapping Score and Pause */
-.ui-top {
-    position: absolute;
-    top: 10px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    z-index: 20;
-}
-
-.score-box {
-    background: rgba(255, 255, 255, 0.8);
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-weight: bold;
-    color: #F2622E;
-}
-
-#pause-btn {
-    background: #F2622E;
-    border: 2px solid white;
-    color: white;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-/* Theme-matching Center-Aligned Modal */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-}
-
-.modal {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 20px;
-    text-align: center; /* Center aligned content */
-    width: 80%;
-    max-width: 350px;
-    border-top: 8px solid #F2622E;
-}
-
-.modal h2 { color: #F2622E; margin-top: 0; }
-
-#progress-container {
-    width: 100%;
-    height: 6px;
-    background: rgba(238, 238, 238, 0.5);
-}
-
-#progress-bar {
-    width: 0%;
-    height: 100%;
-    background: #F2622E;
-}
-body, html {
-    margin: 0; padding: 0;
-    width: 100%; height: 100%;
-    overflow: hidden;
-    font-family: sans-serif;
-    background: #f0f0f0;
-}
-
-#game-header {
-    background: #F2622E;
-    color: white;
-    text-align: center;
-    padding: 15px 0;
-    font-size: 24px;
-    font-weight: bold;
-    width: 100%;
-}
-
-#game-container {
-    position: relative;
-    width: 100%;
-    max-width: 600px;
-    height: calc(100vh - 54px);
-    margin: 0 auto;
-    overflow: hidden;
-}
-
-.ui-top {
-    position: absolute;
-    top: 15px;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 20px;
-    box-sizing: border-box;
-    z-index: 50;
-}
-
-.score-box {
+    color: #A01018;
     background: rgba(255, 255, 255, 0.9);
     padding: 8px 15px;
     border-radius: 20px;
-    font-weight: bold;
-    color: #F2622E;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-#pause-btn {
-    background: #F2622E;
-    border: 2px solid white;
-    color: white;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-#progress-container {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 6px;
-    background: rgba(0,0,0,0.1);
-    z-index: 40;
-}
-
-#progress-bar {
-    width: 0%;
-    height: 100%;
-    background: #F2622E;
-}
-
-.overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-}
-
-.modal {
+/* Modal (Level Up / Game Over) */
+#level-modal, #game-over-screen {
     background: white;
     padding: 30px;
     border-radius: 15px;
     text-align: center;
-    width: 85%;
-    max-width: 350px;
-    border-top: 10px solid #F2622E;
+    pointer-events: auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    width: 300px;
+    border-top: 5px solid #FFC107;
 }
 
-.form-control {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
+#level-modal h2 {
+    color: #A01018;
+    font-size: 32px;
+    margin: 0 0 15px 0;
 }
 
-.btn {
-    background: #F2622E;
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-}
-/* --- Base Styles (Desktop) --- */
-/* Assuming the container holding the Name and Scores is a flexbox */
-.employee-row-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+.trivia-box {
+    background: #FFF8E1; /* Light yellow background */
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #FFC107;
+    margin-bottom: 20px;
 }
 
-/* Style for your score boxes */
-.score-box {
-    text-align: right;
-    min-width: 80px; /* Prevent them from squishing too small */
-    padding: 0 5px;
-    font-weight: bold;
+.trivia-box h3 {
+    margin: 0 0 5px 0;
+    color: #D32F2F;
+    font-size: 14px;
+    text-transform: uppercase;
 }
 
-/* --- Mobile Responsive Fix --- */
-@media (max-width: 768px) {
-    /* Break the row into a column stack */
-    .employee-row-container {
-        flex-direction: column;
-        align-items: flex-start; /* Align everything to the left */
-        position: relative;
-    }
-
-    /* Make the Name section take full width with some spacing */
-    .employee-details { 
-        width: 100%;
-        margin-bottom: 10px; 
-    }
-
-    /* Create a wrapper for the scores to keep them side-by-side below the name */
-    .score-box-wrapper {
-        display: flex;
-        width: 100%;
-        justify-content: space-between; /* Push scores to edges or consistent spacing */
-        background-color: #f9f9f9; /* Optional: distinct background for data */
-        padding: 5px;
-        border-radius: 4px;
-    }
-
-    .score-box {
-        text-align: left; /* Align text for readability */
-        font-size: 13px;  /* Adjust font size for mobile */
-    }
+.trivia-box p {
+    margin: 0;
+    color: #333;
+    font-size: 15px;
+    line-height: 1.4;
 }
