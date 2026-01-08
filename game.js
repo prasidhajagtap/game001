@@ -1,159 +1,247 @@
+/* Project: Jump Master (game002)
+    Optimized Version: Preloading, distance-based scoring, cleaned structure.
+*/
+
+// --- CONFIGURATION ---
+const CANVAS_MAX_WIDTH = 450; // Cap for larger screens
+const GRAVITY = 0.4;
+const JUMP_STRENGTH = -12;
+const EXPIRY_MS = 7776000000; // 90 Days
+const PLATFORM_WIDTH = 80;
+const PLATFORM_HEIGHT = 30;
+const PLAYER_WIDTH = 50;
+const PLAYER_HEIGHT = 50;
+const INITIAL_PLATFORM_SPACING = 120;
+
+// --- ASSETS ---
+const charImg = new Image(); charImg.src = 'character.png';
+const block1Img = new Image(); block1Img.src = 'block-1.png';
+const block2Img = new Image(); block2Img.src = 'block-2.png';
+let assetsLoaded = 0;
+const totalAssets = 3;
+
+charImg.onload = () => assetsLoaded++;
+block1Img.onload = () => assetsLoaded++;
+block2Img.onload = () => assetsLoaded++;
+
+// --- STATE MANAGEMENT ---
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-const loginScreen = document.getElementById('login-screen');
-const scoreEl = document.getElementById('score');
+let player = { x: 0, y: 0, vx: 0, vy: 0 }; // Initialized in resetGame
+let platforms = [];
+let score = 0;
+let gameRunning = false;
+let currentUser = null;
 
-let width, height, player, platforms, score = 0, gameActive = false;
-const gravity = 0.4;
-const jumpStrength = -12;
+// --- VALIDATION & AUTH ---
+const nameRegex = /^[A-Za-z\s]+$/;
+const pidRegex = /^[0-9]+$/;
 
-// Asset Loading (.png as requested)
-const charImg = new Image(); charImg.src = 'character.png';
-const plat1 = new Image(); plat1.src = 'block-1.png'; // Updated to .png
-const plat2 = new Image(); plat2.src = 'block-2.png'; // Updated to .png
+document.addEventListener('DOMContentLoaded', () => {
+    checkSession();
+    document.getElementById('start-btn').addEventListener('click', handleLogin);
+});
 
-// 1. Validation & Persistence
-function checkUserSession() {
-    const savedUser = localStorage.getItem('game001_user');
-    const expiry = localStorage.getItem('game001_expiry');
-    if (savedUser && expiry && new Date().getTime() < expiry) {
-        loginScreen.style.display = 'none';
-        initGame();
-    }
-}
+function handleLogin() {
+    const name = document.getElementById('username').value.trim();
+    const pid = document.getElementById('poornataId').value.trim();
+    const errorMsg = document.getElementById('error-msg');
 
-document.getElementById('start-btn').onclick = function() {
-    const nameInput = document.getElementById('username').value;
-    const pidInput = document.getElementById('poornataId').value;
-
-    // Bug 1 Fix: Regex Validation
-    const nameRegex = /^[A-Za-z\s]+$/;
-    const pidRegex = /^[0-9]+$/;
-
-    if(!nameRegex.test(nameInput)) {
-        alert("Name must contain alphabets only.");
+    if (!name || !nameRegex.test(name)) {
+        errorMsg.textContent = "Error: Name must contain alphabets only (no empty).";
+        errorMsg.classList.remove('hidden');
         return;
     }
-    if(!pidRegex.test(pidInput)) {
-        alert("Poornata ID must contain numbers only.");
+    if (!pid || !pidRegex.test(pid)) {
+        errorMsg.textContent = "Error: Poornata ID must be numeric (no empty).";
+        errorMsg.classList.remove('hidden');
         return;
     }
 
-    const user = { name: nameInput, pid: pidInput, history: [], highScore: 0 };
-    localStorage.setItem('game001_user', JSON.stringify(user));
-    localStorage.setItem('game001_expiry', new Date().getTime() + (90 * 24 * 60 * 60 * 1000));
-    loginScreen.style.display = 'none';
-    initGame();
-};
+    errorMsg.classList.add('hidden');
 
-function resize() {
-    width = window.innerWidth > 500 ? 500 : window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
+    // Set Session
+    const expiry = Date.now() + EXPIRY_MS;
+    const userData = { name, pid, expiry };
+    localStorage.setItem('game002_user', JSON.stringify(userData));
+    localStorage.setItem('game002_expiry', expiry);
+
+    startGame(userData);
 }
-window.addEventListener('resize', resize);
-resize();
 
-function initGame() {
-    score = 0;
-    scoreEl.innerText = score;
-    // Start player 100px above the starter platform
-    player = { x: width/2 - 25, y: height - 150, w: 50, h: 50, vx: 0, vy: 0 };
-    platforms = [];
+function checkSession() {
+    const storedUser = localStorage.getItem('game002_user');
+    const storedExpiry = localStorage.getItem('game002_expiry');
 
-    // Bug 2 Fix: Create a guaranteed starting platform
-    platforms.push({ x: width/2 - 50, y: height - 80, w: 100, h: 30, img: plat1 });
-
-    for(let i=1; i<8; i++) {
-        platforms.push({
-            x: Math.random() * (width - 80),
-            y: height - (i * 120) - 80,
-            w: 80, h: 30,
-            img: Math.random() > 0.5 ? plat1 : plat2
-        });
+    if (storedUser && storedExpiry && Date.now() < parseInt(storedExpiry)) {
+        startGame(JSON.parse(storedUser));
+    } else {
+        localStorage.removeItem('game002_user');
+        localStorage.removeItem('game002_expiry');
     }
-    gameActive = true;
-    animate();
 }
 
-// Bug 3 Fix: Robust Click & Touch
+// --- GAME ENGINE ---
+function startGame(user) {
+    currentUser = user;
+    document.getElementById('login-container').classList.add('hidden');
+    document.getElementById('game-container').classList.remove('hidden');
+
+    // Resize canvas
+    canvas.width = Math.min(window.innerWidth, CANVAS_MAX_WIDTH);
+    canvas.height = window.innerHeight;
+
+    // Wait for assets before starting
+    checkAssetsLoaded();
+}
+
+function checkAssetsLoaded() {
+    if (assetsLoaded === totalAssets) {
+        resetGame();
+        gameRunning = true;
+        requestAnimationFrame(gameLoop);
+    } else {
+        setTimeout(checkAssetsLoaded, 100); // Poll every 100ms
+    }
+}
+
+window.addEventListener('resize', () => {
+    if (currentUser) {
+        canvas.width = Math.min(window.innerWidth, CANVAS_MAX_WIDTH);
+        canvas.height = window.innerHeight;
+        resetGame(); // Optional: Reset on resize for consistency
+    }
+});
+
 function handleInput(e) {
-    e.preventDefault();
+    if (!gameRunning) {
+        resetGame();
+        gameRunning = true;
+        return;
+    }
     const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-    player.vx = clientX < width / 2 ? -7 : 7;
+    const midPoint = canvas.width / 2;
+    player.vx = clientX < midPoint ? -7 : 7;
 }
 
-window.addEventListener('mousedown', handleInput);
-window.addEventListener('touchstart', handleInput, {passive: false});
-window.addEventListener('mouseup', () => player.vx = 0);
-window.addEventListener('touchend', () => player.vx = 0);
+function resetGame() {
+    player = {
+        x: canvas.width / 2 - PLAYER_WIDTH / 2,
+        y: canvas.height - 150,
+        vx: 0,
+        vy: 0
+    };
+    platforms = [];
+    score = 0;
+    document.getElementById('score-display').innerText = `Score: ${score}`;
+
+    // Starter Platform
+    platforms.push({ x: canvas.width / 2 - PLATFORM_WIDTH / 2, y: canvas.height - 50, type: 1 });
+
+    // Generate initial platforms
+    for (let i = 0; i < 6; i++) {
+        spawnPlatform(canvas.height - 150 - (i * INITIAL_PLATFORM_SPACING));
+    }
+
+    // Input Handling
+    window.addEventListener('mousedown', handleInput);
+    window.addEventListener('touchstart', handleInput, { passive: false });
+}
+
+function spawnPlatform(y) {
+    const x = Math.random() * (canvas.width - PLATFORM_WIDTH);
+    const type = Math.random() > 0.5 ? 1 : 2;
+    platforms.push({ x, y, type });
+}
 
 function update() {
-    if(!gameActive) return;
-    player.vy += gravity;
-    player.y += player.vy;
+    player.vy += GRAVITY;
     player.x += player.vx;
+    player.y += player.vy;
+    player.vx *= 0.9; // Friction
 
-    if (player.x > width) player.x = -player.w;
-    if (player.x < -player.w) player.x = width;
+    // Screen Wrap
+    if (player.x + PLAYER_WIDTH < 0) player.x = canvas.width;
+    if (player.x > canvas.width) player.x = -PLAYER_WIDTH;
 
-    // Platform Collision
-    platforms.forEach(p => {
-        if (player.vy > 0 && 
-            player.x + 15 < p.x + p.w && player.x + player.w - 15 > p.x &&
-            player.y + player.h > p.y && player.y + player.h < p.y + 15) {
-            player.vy = jumpStrength;
-        }
-    });
-
-    // Camera move
-    if (player.y < height / 2) {
-        let diff = height / 2 - player.y;
-        player.y = height / 2;
-        score += 1;
-        scoreEl.innerText = score;
+    // Platform Collision (only when falling)
+    if (player.vy > 0) {
         platforms.forEach(p => {
-            p.y += diff;
-            if (p.y > height) {
-                p.y = 0;
-                p.x = Math.random() * (width - 80);
-                p.img = Math.random() > 0.5 ? plat1 : plat2;
+            if (
+                player.x < p.x + PLATFORM_WIDTH &&
+                player.x + PLAYER_WIDTH > p.x &&
+                player.y + PLAYER_HEIGHT > p.y &&
+                player.y + PLAYER_HEIGHT < p.y + PLATFORM_HEIGHT
+            ) {
+                player.vy = JUMP_STRENGTH;
             }
         });
     }
-    if (player.y > height) endGame();
+
+    // Scroll Logic (keep player centered when ascending)
+    const centerY = canvas.height / 2;
+    if (player.y < centerY) {
+        const scrollAmount = centerY - player.y;
+        player.y = centerY;
+        score += Math.floor(scrollAmount); // Optimized: score by distance
+        document.getElementById('score-display').innerText = `Score: ${score}`;
+        platforms.forEach(p => {
+            p.y += scrollAmount; // Move platforms down by scroll amount
+            if (p.y > canvas.height) {
+                p.y = 0 - PLATFORM_HEIGHT; // Reset slightly above top for smooth entry
+                p.x = Math.random() * (canvas.width - PLATFORM_WIDTH);
+                p.type = Math.random() > 0.5 ? 1 : 2; // Randomize type on reset
+            }
+        });
+    }
+
+    // Game Over
+    if (player.y > canvas.height) {
+        gameOver();
+    }
 }
 
 function draw() {
-    ctx.clearRect(0, 0, width, height);
-    // Bug 4 Fix: Full platform image rendering
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw Player
+    ctx.drawImage(charImg, player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT); // Preloaded, no fallback needed
+
+    // Draw Platforms
     platforms.forEach(p => {
-        ctx.drawImage(p.img, p.x, p.y, p.w, p.h);
+        const img = p.type === 1 ? block1Img : block2Img;
+        ctx.drawImage(img, p.x, p.y, PLATFORM_WIDTH, PLATFORM_HEIGHT);
     });
-    ctx.drawImage(charImg, player.x, player.y, player.w, player.h);
 }
 
-function animate() {
-    update();
-    draw();
-    if(gameActive) requestAnimationFrame(animate);
+function gameLoop() {
+    if (gameRunning) {
+        update();
+        draw();
+        requestAnimationFrame(gameLoop);
+    }
 }
 
-// Bug 5 Fix: History Display
-function endGame() {
-    gameActive = false;
-    let user = JSON.parse(localStorage.getItem('game001_user'));
-    
-    user.history.unshift(score);
-    user.history = user.history.slice(0, 3);
-    
-    if (score > user.highScore) user.highScore = score;
-    localStorage.setItem('game001_user', JSON.stringify(user));
-
-    const historyText = user.history.map((s, i) => `Game ${i+1}: ${s}`).join('\n');
-    alert(`GAME OVER\n\nYour Score: ${score}\nBest: ${user.highScore}\n\nLast 3 Games:\n${historyText}`);
+function gameOver() {
+    gameRunning = false;
+    updateHistory(score);
+    alert(`Game Over! Score: ${score}`);
     location.reload();
 }
 
-checkUserSession();
+// --- HISTORY & STATS ---
+function updateHistory(newScore) {
+    let history = JSON.parse(localStorage.getItem('game002_history')) || [];
+
+    // Update High Score
+    let highScore = parseInt(localStorage.getItem('game002_highscore')) || 0;
+    if (newScore > highScore) {
+        localStorage.setItem('game002_highscore', newScore);
+    }
+
+    // Update Recent History (FIFO, newest first)
+    history.unshift(newScore);
+    if (history.length > 3) history.pop();
+
+    localStorage.setItem('game002_history', JSON.stringify(history));
+}
