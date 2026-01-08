@@ -2,31 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard - game001</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jump Master - User Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .stats-box { background: #eee; padding: 10px; margin: 10px 0; border-radius: 5px; text-align: left; }
+    </style>
 </head>
-<body style="padding: 30px; background: #f1f0f7;">
-    <div class="modal" style="width: 100%; max-width: 400px; margin: auto;">
-        <h2 class="section_title">My Performance</h2>
-        <div style="background: #FCF4DC; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-            <p style="margin: 0; color: #F2622E; font-weight: 800;">ALL TIME HIGH</p>
-            <h1 id="hi" style="margin: 0; font-size: 40px;">0</h1>
+<body>
+    <div id="login-container">
+        <h2>User Dashboard</h2>
+        <div id="user-info"></div>
+        
+        <div class="stats-box">
+            <h3>All-Time High Score</h3>
+            <p id="high-score">0</p>
         </div>
-        
-        <h3 style="text-align: left; color: #65657c;">Last 3 Scores</h3>
-        <div id="history-box" style="text-align: left;"></div>
-        
-        <button class="btn" style="width: 100%;" onclick="location.href='index.html'">BACK TO GAME</button>
+
+        <div class="stats-box">
+            <h3>Last 3 Games (Most Recent First)</h3>
+            <ul id="history-list"></ul>
+        </div>
+
+        <button onclick="window.location.href='index.html'">Back to Game</button>
+        <button onclick="logout()" style="background-color: #333;">Logout</button>
     </div>
 
     <script>
-        const user = JSON.parse(localStorage.getItem('game001_user'));
-        if(user) {
-            document.getElementById('hi').innerText = user.highScore;
-            const container = document.getElementById('history-box');
-            user.history.forEach((score, index) => {
-                container.innerHTML += `<p style="border-bottom: 1px solid #ddd; padding: 10px 0;">Attempt ${index + 1}: <strong>${score} pts</strong></p>`;
+        // Load Data from LocalStorage (updated keys)
+        const user = JSON.parse(localStorage.getItem('game002_user'));
+        const highScore = localStorage.getItem('game002_highscore') || 0;
+        const history = JSON.parse(localStorage.getItem('game002_history')) || [];
+
+        if (user) {
+            document.getElementById('user-info').innerHTML = `
+                <p><strong>Name:</strong> ${user.name}</p>
+                <p><strong>ID:</strong> ${user.pid}</p>
+            `;
+        } else {
+            document.getElementById('user-info').innerText = "No active session found.";
+        }
+
+        document.getElementById('high-score').innerText = highScore;
+
+        const list = document.getElementById('history-list');
+        if (history.length === 0) {
+            list.innerHTML = "<li>No games played yet.</li>";
+        } else {
+            history.forEach((score, index) => {
+                const li = document.createElement('li');
+                li.innerText = `Game ${index + 1}: ${score} pts`;
+                list.appendChild(li);
             });
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
         }
     </script>
 </body>
