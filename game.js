@@ -1,18 +1,18 @@
-/* Project: Jump Master (game002) - ENGAGED EDITION
-   Features: Power-ups, Particles, Confetti, ABG Trivia, Parallax Clouds, Glows, Easier Gameplay
+/* game.js - FINAL VERSION (All fixes applied)
+   Key Changes in this version:
+   - Sizes increased + dynamic scaling for better visibility on all screens (no "zoomed out" feel)
+   - Platforms avoid edges (safe margins) → less frustrating randomness, no overlap issues
+   - Power-ups: Larger pulsing gold orb (very visible), massive particle burst on collect
+   - Trivia: ONLY on game over (with random Aditya Birla Group fact)
+   - Confetti/Particles: Normal particles reduced, colourful confetti burst ONLY on new high score at death
+   - Player positioned lower on screen for better landing visibility & upcoming platform planning
+   - Easier & more engaging overall
 */
 
 const CANVAS_MAX_WIDTH = 450;
-const GRAVITY = 0.35; // Slightly easier
-const JUMP_STRENGTH = -13; // Stronger jump
+const GRAVITY = 0.35;
+const JUMP_STRENGTH = -13.5;
 const EXPIRY_MS = 7776000000;
-const PLATFORM_WIDTH = 80;
-const PLATFORM_HEIGHT = 30;
-const PLAYER_WIDTH = 50;
-const PLAYER_HEIGHT = 50;
-const INITIAL_PLATFORM_SPACING = 110; // Closer for easier jumps
-
-// Power-up duration (frames ~10s @60fps)
 const POWER_DURATION = 600;
 
 // --- ASSETS ---
@@ -22,7 +22,6 @@ const block2Img = new Image(); block2Img.src = 'block-2.png';
 
 let assetsLoaded = 0;
 const totalAssets = 3;
-
 function incrementLoaded() { assetsLoaded++; }
 
 // --- ABG TRIVIA ---
@@ -48,10 +47,6 @@ let clouds = [];
 let particles = [];
 let score = 0;
 let gameRunning = false;
-let gamePaused = false;
-let showTrivia = false;
-let triviaText = '';
-let triviaLevel = 0;
 let powerType = 0;
 let powerTime = 0;
 let powerName = '';
@@ -67,10 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
   ctx = canvas.getContext('2d');
 
   checkSession();
-  const startBtn = document.getElementById('start-btn');
-  if (startBtn) startBtn.addEventListener('click', handleLogin);
+  document.getElementById('start-btn')?.addEventListener('click', handleLogin);
 
-  // Assets
   charImg.onload = incrementLoaded; charImg.onerror = incrementLoaded;
   block1Img.onload = incrementLoaded; block1Img.onerror = incrementLoaded;
   block2Img.onload = incrementLoaded; block2Img.onerror = incrementLoaded;
@@ -145,19 +138,11 @@ function waitForAssets() {
 function setupInputListeners() {
   window.addEventListener('mousedown', handleInput);
   window.addEventListener('touchstart', handleInput, { passive: false });
-  window.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 }
 
-// --- INPUT ---
 function handleInput(e) {
   e.preventDefault();
-  if (!canvas || !player) return;
-
-  if (gamePaused || showTrivia) {
-    gamePaused = false;
-    showTrivia = false;
-    return;
-  }
+  if (!player) return;
 
   if (!gameRunning) {
     resetGame();
@@ -168,14 +153,28 @@ function handleInput(e) {
 
   const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
   const midPoint = canvas.width / 2;
-  player.vx = (clientX < midPoint ? -7 : 7) * vxMult;
+  player.vx = (clientX < midPoint ? -8 : 8) * vxMult;
+}
+
+// --- SIZES (Dynamic for visibility) ---
+function getSizes() {
+  const scale = canvas.width / 400;
+  return {
+    playerSize: Math.max(60 * scale, 50),
+    platformWidth: Math.max(110 * scale, 90),
+    wideWidth: Math.max(170 * scale, 140),
+    platformHeight: 30 * scale,
+    orbRadius: 18 * scale,
+    spacing: 105 * scale
+  };
 }
 
 // --- RESET ---
 function resetGame() {
+  const s = getSizes();
   player = {
-    x: canvas.width / 2 - PLAYER_WIDTH / 2,
-    y: canvas.height - 150,
+    x: canvas.width / 2 - s.playerSize / 2,
+    y: canvas.height - 200,
     vx: 0,
     vy: 0
   };
@@ -183,7 +182,6 @@ function resetGame() {
   clouds = [];
   particles = [];
   score = 0;
-  triviaLevel = 0;
   powerType = 0;
   powerTime = 0;
   powerName = '';
@@ -191,174 +189,132 @@ function resetGame() {
   vxMult = 1;
   invincible = false;
   scoreMult = 1;
-  gamePaused = false;
-  showTrivia = false;
   document.getElementById('score-display').innerText = `Score: ${score}`;
 
-  // Starting wide platform
-  platforms.push({ x: canvas.width / 2 - 60, y: canvas.height - 50, type: 0, width: 120 });
+  // Starter wide platform
+  platforms.push({ x: canvas.width / 2 - s.wideWidth / 2, y: canvas.height - 50, type: 0, width: s.wideWidth });
 
-  // Initial platforms (more for easier start)
-  for (let i = 0; i < 8; i++) {
-    spawnPlatform(canvas.height - 150 - i * INITIAL_PLATFORM_SPACING);
+  // Initial platforms
+  for (let i = 0; i < 9; i++) {
+    spawnPlatform(canvas.height - 180 - i * s.spacing);
   }
 
-  // Clouds (3 layers)
+  // Clouds
   for (let layer = 0; layer < 3; layer++) {
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       clouds.push({
-        x: Math.random() * (canvas.width + 200),
-        y: 80 + layer * 120 + Math.random() * 40,
-        size: 20 + Math.random() * 30,
-        speed: 0.15 + layer * 0.1
+        x: Math.random() * (canvas.width + 200) - 100,
+        y: 100 + layer * 140,
+        size: 30 + Math.random() * 40,
+        speed: 0.2 + layer * 0.15
       });
     }
   }
 }
 
 function spawnPlatform(y) {
+  const s = getSizes();
+  const margin = 50;
+  const maxX = canvas.width - s.platformWidth - margin;
+  const minX = margin;
+  const x = minX + Math.random() * (maxX - minX);
+
   const rand = Math.random();
-  let type, width = PLATFORM_WIDTH;
-  if (rand < 0.12) {
-    type = 0; width = 120; // Wide safe
-  } else if (rand < 0.17) {
-    type = 3; width = PLATFORM_WIDTH; // Power-up
-  } else {
-    type = Math.random() > 0.5 ? 1 : 2;
-    width = PLATFORM_WIDTH;
-  }
-  platforms.push({ x: Math.random() * (canvas.width - width), y, type, width });
+  let type, width = s.platformWidth;
+  if (rand < 0.15) { type = 0; width = s.wideWidth; } // 15% wide safe
+  else if (rand < 0.30) { type = 3; } // 15% power-up (more visible/rewarding)
+  else { type = Math.random() > 0.5 ? 1 : 2; }
+
+  platforms.push({ x, y, type, width });
 }
 
 // --- UPDATE ---
 function update() {
-  // Player physics
+  const s = getSizes();
+
   player.vy += GRAVITY;
   player.x += player.vx;
   player.y += player.vy;
   player.vx *= 0.9;
 
-  // Wrap around
-  if (player.x + PLAYER_WIDTH < 0) player.x = canvas.width;
-  if (player.x > canvas.width) player.x = -PLAYER_WIDTH;
+  if (player.x + s.playerSize < 0) player.x = canvas.width;
+  if (player.x > canvas.width) player.x = -s.playerSize;
 
-  // Platforms collision (falling only)
+  // Collision
   if (player.vy > 0) {
     for (const p of platforms) {
       if (
         player.x < p.x + p.width &&
-        player.x + PLAYER_WIDTH > p.x &&
-        player.y + PLAYER_HEIGHT > p.y &&
-        player.y + PLAYER_HEIGHT < p.y + PLATFORM_HEIGHT
+        player.x + s.playerSize > p.x &&
+        player.y + s.playerSize > p.y &&
+        player.y + s.playerSize < p.y + s.platformHeight
       ) {
         player.vy = currentJumpStrength;
-        // Land particles
-        burst(player.x + PLAYER_WIDTH / 2, player.y + PLAYER_HEIGHT, '#4CAF50', 12);
-        // Power-up?
+        burst(player.x + s.playerSize / 2, player.y + s.playerSize, '#4CAF50', 10);
         if (p.type === 3) {
-          burst(p.x + p.width / 2, p.y + 15, '#FFD700', 16);
+          burst(p.x + p.width / 2, p.y, '#FFD700', 30); // BIG collection effect
           activatePower();
-          p.type = 1; // Consume
+          p.type = 1;
         }
         break;
       }
     }
   }
 
-  // Trail particles (when jumping up)
-  if (player.vy < -2) {
-    addParticle(
-      player.x + PLAYER_WIDTH / 2 + (Math.random() - 0.5) * 10,
-      player.y + PLAYER_HEIGHT,
-      (Math.random() - 0.5) * 2,
-      Math.random() * -1,
-      'rgba(255,255,255,0.6)',
-      3
-    );
+  // Light jump trail
+  if (player.vy < -3) {
+    addParticle(player.x + s.playerSize / 2, player.y + s.playerSize, (Math.random() - 0.5) * 2, 1, 'rgba(255,255,255,0.5)', 4);
   }
 
-  // Scroll (center player)
-  const centerY = canvas.height / 2;
-  if (player.y < centerY) {
-    const scrollAmount = centerY - player.y;
-    player.y = centerY;
+  // Scroll - player lower on screen for better visibility
+  const playerTargetY = canvas.height * 0.65; // Lower = more space above for planning
+  if (player.y < playerTargetY) {
+    const scrollAmount = playerTargetY - player.y;
+    player.y = playerTargetY;
     score += Math.floor(scrollAmount * scoreMult);
     document.getElementById('score-display').innerText = `Score: ${score}`;
 
-    // Move platforms
     platforms.forEach(p => {
       p.y += scrollAmount;
       if (p.y > canvas.height) {
-        p.y = -PLATFORM_HEIGHT;
-        p.x = Math.random() * (canvas.width - p.width);
-        // Respawn type
-        const rand = Math.random();
-        if (rand < 0.12) p.type = 0;
-        else if (rand < 0.17) p.type = 3;
-        else p.type = Math.random() > 0.5 ? 1 : 2;
+        spawnPlatform(-s.platformHeight); // Reuse slot with new platform
       }
     });
-
-    // Trivia check
-    const newTriviaLevel = Math.floor(score / 500);
-    if (newTriviaLevel > triviaLevel) {
-      triviaLevel = newTriviaLevel;
-      gamePaused = true;
-      showTrivia = true;
-      triviaText = trivias[Math.floor(Math.random() * trivias.length)];
-    }
   }
 
-  // Clouds scroll
+  // Clouds
   clouds.forEach(c => {
     c.x -= c.speed;
-    if (c.x < -100) c.x = canvas.width + Math.random() * 200;
+    if (c.x < -150) c.x = canvas.width + 100;
   });
 
-  // Particles update
+  // Particles
   particles = particles.filter(p => {
     p.x += p.vx;
     p.y += p.vy;
-    p.vy += 0.05; // Light gravity
+    p.vy += 0.08;
     p.life--;
-    p.alpha = p.life / 30;
     return p.life > 0;
   });
 
-  // Power-up timer
+  // Power timer
   if (powerTime > 0) {
     powerTime--;
-    if (powerTime <= 0) {
-      deactivatePower();
-    }
+    if (powerTime <= 0) deactivatePower();
   }
 
-  // Game Over
-  if (player.y > canvas.height && !invincible) {
-    gameOver();
-  }
+  if (player.y > canvas.height && !invincible) gameOver();
 }
 
+// --- POWER UPS ---
 function activatePower() {
   powerType = Math.floor(Math.random() * 4) + 1;
   powerTime = POWER_DURATION;
   switch (powerType) {
-    case 1:
-      powerName = 'Super Jump!';
-      currentJumpStrength = -16;
-      break;
-    case 2:
-      powerName = 'Speed Boost!';
-      vxMult = 1.5;
-      break;
-    case 3:
-      powerName = 'Shield Active!';
-      invincible = true;
-      break;
-    case 4:
-      powerName = 'x2 Score!';
-      scoreMult = 2;
-      break;
+    case 1: powerName = 'SUPER JUMP!'; currentJumpStrength = -17; break;
+    case 2: powerName = 'SPEED BOOST!'; vxMult = 1.6; break;
+    case 3: powerName = 'SHIELD!'; invincible = true; break;
+    case 4: powerName = 'x2 SCORE!'; scoreMult = 2; break;
   }
 }
 
@@ -372,182 +328,143 @@ function deactivatePower() {
 
 // --- DRAW ---
 function draw() {
-  // Background gradient
-  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0, '#87CEEB');
-  gradient.addColorStop(1, '#E0F6FF');
-  ctx.fillStyle = gradient;
+  const s = getSizes();
+
+  // Sky gradient
+  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  grad.addColorStop(0, '#87CEEB');
+  grad.addColorStop(1, '#B0E0FF');
+  ctx.fillStyle = grad;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Clouds
-  ctx.fillStyle = 'rgba(255,255,255,0.9)';
-  clouds.forEach(c => {
-    drawCloud(c.x, c.y, c.size);
-  });
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  clouds.forEach(c => drawCloud(c.x, c.y, c.size));
 
   // Platforms
   platforms.forEach(p => {
     if (p.type === 3) {
-      // Power orb glow
+      // Pulsing power orb
       ctx.save();
       ctx.shadowColor = '#FFD700';
-      ctx.shadowBlur = 15;
+      ctx.shadowBlur = 25 + Math.sin(Date.now() / 150) * 15;
       ctx.fillStyle = '#FFD700';
       ctx.beginPath();
-      ctx.arc(p.x + p.width / 2, p.y + 15, 12, 0, Math.PI * 2);
+      ctx.arc(p.x + p.width / 2, p.y + s.platformHeight / 2, s.orbRadius, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
-      // Base
-      ctx.drawImage(block1Img, p.x, p.y, p.width, PLATFORM_HEIGHT);
     } else if (p.type === 0) {
-      // Wide platform
-      ctx.drawImage(block1Img, p.x, p.y, 60, PLATFORM_HEIGHT);
-      ctx.drawImage(block1Img, p.x + 60, p.y, 60, PLATFORM_HEIGHT);
+      // Wide
+      ctx.drawImage(block1Img, p.x, p.y, p.width / 2, s.platformHeight);
+      ctx.drawImage(block1Img, p.x + p.width / 2, p.y, p.width / 2, s.platformHeight);
     } else {
       const img = p.type === 1 ? block1Img : block2Img;
-      ctx.drawImage(img, p.x, p.y, p.width, PLATFORM_HEIGHT);
+      ctx.drawImage(img, p.x, p.y, p.width, s.platformHeight);
     }
   });
 
   // Particles
   particles.forEach(p => {
-    ctx.save();
-    ctx.globalAlpha = p.alpha;
+    ctx.globalAlpha = p.life / 30;
     ctx.fillStyle = p.color;
-    ctx.fillRect(p.x, p.y, p.size, p.size);
-    ctx.restore();
+    ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+    ctx.globalAlpha = 1;
   });
 
   // Player shadow
-  ctx.fillStyle = 'rgba(0,0,0,0.3)';
-  ctx.fillRect(player.x + 8, player.y + PLAYER_HEIGHT - 8, PLAYER_WIDTH * 0.8, 8);
+  ctx.fillStyle = 'rgba(0,0,0,0.2)';
+  ctx.fillRect(player.x + 10, player.y + s.playerSize, s.playerSize * 0.8, 12);
 
-  // Player glow if invincible
+  // Invincible glow
   if (invincible) {
     ctx.save();
-    ctx.shadowColor = '#00ffff';
-    ctx.shadowBlur = 20;
+    ctx.shadowColor = '#00FFFF';
+    ctx.shadowBlur = 30;
   }
-  ctx.drawImage(charImg, player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
+  ctx.drawImage(charImg, player.x, player.y, s.playerSize, s.playerSize);
   if (invincible) ctx.restore();
 
-  // UI
-  ctx.textAlign = 'left';
+  // Score
   ctx.fillStyle = 'white';
-  ctx.font = 'bold 24px Arial';
-  ctx.fillText(`Score: ${score}`, 20, 35);
-
+  ctx.font = 'bold 28px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(`Score: ${score}`, 20, 50);
   if (scoreMult > 1) {
-    ctx.fillStyle = 'gold';
-    ctx.fillText(`x${scoreMult}`, canvas.width - 120, 35);
+    ctx.fillStyle = '#FFD700';
+    ctx.fillText(`x${scoreMult}`, canvas.width - 100, 50);
   }
 
   // Power banner
   if (powerName) {
-    ctx.fillStyle = 'rgba(0,0,0,0.8)';
-    ctx.fillRect(20, canvas.height - 80, canvas.width - 40, 60);
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    ctx.fillRect(10, canvas.height - 90, canvas.width - 20, 70);
     ctx.textAlign = 'center';
     ctx.fillStyle = 'white';
-    ctx.font = 'bold 20px Arial';
-    ctx.fillText(powerName, canvas.width / 2, canvas.height - 45);
-    ctx.font = '16px Arial';
-    ctx.fillText('Active!', canvas.width / 2, canvas.height - 25);
-  }
-
-  // Trivia overlay
-  if (showTrivia) {
-    ctx.fillStyle = 'rgba(0,0,0,0.9)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.textAlign = 'center';
-    ctx.fillStyle = 'white';
-    ctx.font = 'bold 32px Arial';
-    ctx.fillText('Trivia Time!', canvas.width / 2, canvas.height / 2 - 50);
-    ctx.font = '22px Arial';
-    ctx.fillText(triviaText, canvas.width / 2, canvas.height / 2 + 10);
-    ctx.font = 'bold 18px Arial';
-    ctx.fillText('Tap anywhere to continue', canvas.width / 2, canvas.height / 2 + 70);
+    ctx.font = 'bold 26px Arial';
+    ctx.fillText(powerName, canvas.width / 2, canvas.height - 40);
   }
 }
 
 function drawCloud(x, y, size) {
   ctx.beginPath();
   ctx.arc(x, y, size, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(x - size / 2, y - size / 3, size * 0.7, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(x + size / 2, y - size / 3, size * 0.7, 0, Math.PI * 2);
+  ctx.arc(x - size * 0.6, y, size * 0.8, 0, Math.PI * 2);
+  ctx.arc(x + size * 0.6, y, size * 0.8, 0, Math.PI * 2);
   ctx.fill();
 }
 
 function addParticle(x, y, vx, vy, color, size) {
-  particles.push({ x, y, vx, vy, color, size, life: 30, alpha: 1 });
+  particles.push({ x, y, vx, vy, color, size, life: 30 });
 }
 
 function burst(x, y, color, count) {
   for (let i = 0; i < count; i++) {
     const angle = (i / count) * Math.PI * 2;
-    const speed = 2 + Math.random() * 3;
-    addParticle(
-      x,
-      y,
-      Math.cos(angle) * speed,
-      Math.sin(angle) * -speed + (Math.random() - 0.5) * 2,
-      color,
-      3 + Math.random() * 4
-    );
-  }
-}
-
-function burstConfetti(centerX, centerY, count = 80) {
-  const colors = ['#ff0000', '#ff8800', '#ffff00', '#00ff00', '#0088ff', '#8800ff'];
-  for (let i = 0; i < count; i++) {
-    const angle = (i / count) * Math.PI * 2;
     const speed = 3 + Math.random() * 4;
-    addParticle(
-      centerX,
-      centerY,
-      Math.cos(angle) * speed,
-      Math.sin(angle) * -speed,
-      colors[i % 6],
-      4 + Math.random() * 6
-    );
+    addParticle(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed * -0.8, color, 5);
   }
 }
 
-// --- LOOP ---
+function burstConfetti(x, y) {
+  const colors = ['#ff0044', '#ff8800', '#ffff00', '#00ff00', '#0088ff', '#ff00ff'];
+  for (let i = 0; i < 80; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 4 + Math.random() * 6;
+    addParticle(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed * -1, colors[i % 6], 6);
+  }
+}
+
 function gameLoop() {
   if (gameRunning) {
-    if (!gamePaused) update();
+    update();
     draw();
     requestAnimationFrame(gameLoop);
   }
 }
 
-// --- GAME OVER ---
 function gameOver() {
   gameRunning = false;
   updateHistory(score);
 
-  // Confetti if new high score
+  const randomTrivia = trivias[Math.floor(Math.random() * trivias.length)];
   const highScore = parseInt(localStorage.getItem('game002_highscore')) || 0;
-  if (score > highScore) {
-    burstConfetti(canvas.width / 2, canvas.height / 2);
-  }
+  const isNewHigh = score > highScore;
+
+  if (isNewHigh) burstConfetti(canvas.width / 2, canvas.height / 2);
 
   setTimeout(() => {
-    alert(`Game Over! Your Score: ${score}`);
+    alert(
+      `Game Over!\nYour Score: ${score}${isNewHigh ? ' (NEW HIGH SCORE!)' : ''}\n\n` +
+      `Did you know?\n${randomTrivia}\n\nTap OK to play again!`
+    );
     location.reload();
-  }, 300);
+  }, isNewHigh ? 800 : 100); // Delay for confetti visibility
 }
 
 function updateHistory(newScore) {
   let history = JSON.parse(localStorage.getItem('game002_history')) || [];
   let highScore = parseInt(localStorage.getItem('game002_highscore')) || 0;
-  if (newScore > highScore) {
-    localStorage.setItem('game002_highscore', newScore);
-  }
+  if (newScore > highScore) localStorage.setItem('game002_highscore', newScore);
   history.unshift(newScore);
   if (history.length > 3) history.pop();
   localStorage.setItem('game002_history', JSON.stringify(history));
