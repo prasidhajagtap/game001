@@ -9,7 +9,6 @@
 <body>
     <div id="login-container">
         <h1>JUMP MASTER</h1>
-        <img src="seamex.png" alt="Seamex Logo" style="width: 220px; margin: 20px 0;">
         <p>Enter your details to begin</p>
         
         <div class="input-group">
@@ -29,8 +28,20 @@
 
     <div id="game-container" class="hidden">
         <canvas id="gameCanvas"></canvas>
+        
         <div id="ui-layer">
             <span id="score-display">Score: 0</span>
+            <span id="level-display">Level: 1</span>
+            <button id="pause-btn">Pause</button>
+        </div>
+
+        <div id="paused-overlay" class="hidden">
+            <div class="paused-content">
+                <h1>Paused</h1>
+                <p>Did you know?</p>
+                <p id="pause-trivia"></p>
+                <button id="resume-btn">Resume</button>
+            </div>
         </div>
     </div>
 
