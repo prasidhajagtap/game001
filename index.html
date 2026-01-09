@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jump Master</title>
+    <title>Poornata Jump Master</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="login-container">
-        <h1>JUMP MASTER</h1>
+        <h1>Poornata Jump Master</h1>
         <p>Enter your details to begin</p>
         
         <div class="input-group">
@@ -30,17 +30,26 @@
         <canvas id="gameCanvas"></canvas>
         
         <div id="ui-layer">
-            <span id="score-display">Score: 0</span>
-            <span id="level-display">Level: 1</span>
+            <div id="score-display">Score: 0</div>
+            <div id="level-display">Level: 1</div>
             <button id="pause-btn">Pause</button>
         </div>
 
         <div id="paused-overlay" class="hidden">
             <div class="paused-content">
                 <h1>Paused</h1>
-                <p>Did you know?</p>
                 <p id="pause-trivia"></p>
                 <button id="resume-btn">Resume</button>
+            </div>
+        </div>
+
+        <div id="gameover-overlay" class="hidden">
+            <div class="paused-content"> <!-- Re-use style -->
+                <h1>Game Over!</h1>
+                <p id="final-score"></p>
+                <p id="gameover-trivia"></p>
+                <button id="share-btn">Share Score</button>
+                <button id="restart-btn">Play Again</button>
             </div>
         </div>
     </div>
