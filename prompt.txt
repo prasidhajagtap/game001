@@ -1,0 +1,34 @@
+Create a mobile-friendly endless jumper game called "Jump Master" using pure HTML, CSS, and vanilla JavaScript (no libraries).
+
+Core requirements:
+- Login screen with Name (alphabets/spaces only) and Poornata ID (numbers only). Validate inputs. Store session in localStorage for 90 days.
+- Separate admin.html dashboard showing logged user name/ID, all-time high score, last 3 game scores (most recent first), logout button, back to game.
+- Canvas-based gameplay (max 450px width, full height, transparent background).
+- Use these exact assets: character.png (cute orange robot mascot), block-1.png and block-2.png (two floating island platform styles).
+- Split-screen touch controls (left half = move left, right half = move right). Also support mouse and arrow/A-D keys. Controls must follow finger/mouse smoothly.
+- Physics: gravity, jump on platform contact, screen wrap horizontally.
+- Player starts near bottom for good visibility. Camera follows upward (keep player ~65% down screen).
+- Score by vertical distance climbed (accurate, with x2 multiplier power-up).
+- Platforms: random x (strong safe margins, no edge spawns), alternating block-1/block-2, 35% wide platforms, 15% with power-up.
+- Power-ups (highly visible large pulsing gold orb): Super Jump, Speed Boost, Shield (cyan glow), x2 Score. Last ~6 seconds, show banner.
+- Massive gold particle burst on power-up collect. Small dust on landing.
+- Progressive difficulty: levels every 1000 points (displayed). Higher levels = slightly higher gravity, smaller min vertical gaps.
+- Parallax drifting white clouds + sunset sky gradient background.
+- Pause button (top-right, orange). Pause shows overlay with random Aditya Birla Group trivia.
+- Game over when fall off bottom. Show overlay with final score, random trivia, "Share Score" button (uses navigator.share with text "I scored X in Jump Master! 🎉\nDownload Poornata App now: https://onelink.to/6kpm3g" - fallback to prompt copy), "Play Again" button.
+- Confetti particle burst ONLY on new high score at game over.
+- Reduced normal particles (no spam).
+- Fallback coloured rectangles if images fail to load.
+- No external image dependencies except the 3 assets.
+- All code in index.html, style.css, game.js (plus unchanged admin.html).
+
+Latest fixes applied:
+- Robust touch/mouse controls that follow finger.
+- Platforms properly spaced (large random gaps, no vertical stacking).
+- No black line/shadow under player.
+- Pause button small and styled correctly.
+- Confetti only on new high score.
+- Game over overlay instead of alert for better share/restart.
+- Safe DOM access to prevent console errors.
+
+Implement exactly with clean, responsive code.
