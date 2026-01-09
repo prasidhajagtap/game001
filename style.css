@@ -1,4 +1,4 @@
-/* style.css - Updated with sky gradient, pause overlay, no missing image dependencies */
+/* style.css - Clean, visible buttons, better overlay */
 
 :root {
     --action-orange: #ff6600;
@@ -48,10 +48,9 @@ button {
     border: none;
     padding: 12px 20px;
     font-size: 16px;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    width: 100%;
-    margin-top: 10px;
+    margin: 10px 0;
 }
 
 .hidden { display: none !important; }
@@ -64,13 +63,12 @@ button {
     height: 100%;
     display: flex;
     justify-content: center;
-    /* Beautiful sky gradient (sunset style) - no background.png dependency */
     background: linear-gradient(to bottom, #87CEEB 0%, #FFA500 60%, #FF6347 100%);
 }
 
 canvas {
     display: block;
-    max-width: 100%;
+    max-width: 450px;
     max-height: 100%;
     background: transparent;
 }
@@ -79,67 +77,74 @@ canvas {
     position: absolute;
     top: 20px;
     left: 20px;
-    font-size: 28px;
-    font-weight: bold;
     color: white;
-    text-shadow: 3px 3px 0 #000;
-    width: 100%;
+    text-shadow: 2px 2px 4px #000;
+    font-weight: bold;
+    font-size: 28px;
     pointer-events: none;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #score-display, #level-display {
     display: block;
+    margin-bottom: 10px;
     pointer-events: none;
 }
 
-#level-display {
-    margin-top: 40px;
-}
-
-#pause-btn, #resume-btn {
+#pause-btn {
     position: absolute;
     top: 20px;
     right: 20px;
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.6);
-    border: none;
-    border-radius: 8px;
-    font-size: 20px;
-    cursor: pointer;
+    padding: 12px 20px;
+    background: var(--action-orange);
+    font-size: 18px;
     pointer-events: all;
+    width: auto;
 }
 
-#paused-overlay {
+#paused-overlay, #gameover-overlay {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.75);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     color: white;
-    font-size: 24px;
 }
 
 .paused-content {
-    text-align: center;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.7);
     padding: 40px;
     border-radius: 20px;
+    text-align: center;
+    max-width: 90%;
 }
 
-#pause-trivia {
-    max-width: 80%;
-    margin: 20px auto;
+.paused-content h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+#pause-trivia, #gameover-trivia {
     font-size: 20px;
-    line-height: 1.4;
+    line-height: 1.5;
+    margin: 20px 0;
 }
 
-#resume-btn {
-    position: static;
-    width: auto;
-    padding: 15px 40px;
-    font-size: 24px;
-    margin-top: 20px;
+#final-score {
+    font-size: 32px;
+    margin: 20px 0;
+    color: #FFD700;
+}
+
+#share-btn, #restart-btn, #resume-btn {
+    width: 80%;
+    max-width: 300px;
+    padding: 15px;
+    font-size: 20px;
+    margin: 10px auto;
+    display: block;
 }
